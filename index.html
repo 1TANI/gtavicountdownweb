@@ -153,13 +153,18 @@
     <div class="overlay"></div>
     <div class="content">
       <div class="percentage" id="percentage">0.00%</div>
-      <div class="days-text" id="daysLeft">Loading Days Left...</div>
-      <div class="days-text" id="daysSince">Loading Days Since...</div>
+      <div class="days-text" id="daysLeft">.</div>
+      <div class="days-text" id="daysSince">.</div>
     </div>
   </div>
 
+
+
+  
   <a href="https://discord.com/invite/gta-vi" class="gtavidc-link" target="_blank">GTA 6 UNOFFICIAL DISCORD SERVER</a>
 
+
+  
   <button class="info-button" onclick="showInfo()">TANI</button>
 
   <div class="info-modal" id="infoModal">
@@ -172,10 +177,13 @@
   </div>
 
   <script>
-    const startDate = new Date('2025-05-02T00:00:00Z');
-    const endDate = new Date('2026-05-26T00:00:00Z');
-    const countSinceDate = new Date('2025-05-06T00:00:00Z');
+    const startDate = new Date('2025-05-02T00:00:00Z');    // may 2nd
+    const endDate = new Date('2026-05-26T00:00:00Z');      // may 26th, 2026
+    const countSinceDate = new Date('2025-05-06T00:00:00Z');   // trailer 2 date
 
+
+
+    // "plate" images
     const backgroundImages = [
       'background/background.PNG',
       'background/background2.PNG',
@@ -221,7 +229,7 @@
     setInterval(() => {
       updateCountdownInfo();
       updateBackgroundImage();
-    }, 60 * 1000);
+    }, 60 * 1000); // when/how often updates
   </script>
 </body>
 </html>
