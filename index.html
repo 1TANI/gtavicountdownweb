@@ -152,9 +152,6 @@
   <div class="background-container" id="background">
     <div class="overlay"></div>
     <div class="content">
-      <div class="percentage" id="percentage">Loading...</div>
-      <div class="days-text" id="daysLeft">Calculating...</div>
-      <div class="days-text" id="daysSince">Calculating...</div>
 
       <a href="https://discord.com/invite/gta-vi" class="gtavidc-link" target="_blank">GTA 6 UNOFFICIAL DISCORD SERVER</a>
     </div>
@@ -170,7 +167,9 @@
 
   <script>
     const startDate = new Date('2025-05-02T00:00:00Z');
+	  
     const endDate = new Date('2026-05-26T00:00:00Z');
+	  
     const countSinceDate = new Date('2025-05-06T00:00:00Z');
 
     const backgroundImages = [
@@ -200,6 +199,7 @@
     function updateBackgroundImage() {
       const randomIndex = Math.floor(Math.random() * backgroundImages.length);
       const container = document.getElementById('background');
+	    
       container.style.backgroundImage = `url('${backgroundImages[randomIndex]}')`;
     }
 
@@ -217,7 +217,7 @@
     setInterval(() => {
       updateCountdownInfo();
       updateBackgroundImage();
-    }, 60 * 1000);
+    }, 60 * 1000); // how/when updates
   </script>
 </body>
 </html>
