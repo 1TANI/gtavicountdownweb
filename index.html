@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GTA VI COUNTDOWN - - TANI</title>
+	
+  <style>
+    @font-face {
+      font-family: 'GTAArtDecoMedium';
+      src: url('GTAArtDecoMedium.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'GTAArtDecoMedium', sans-serif;
+      color: white;
+      background: url('background/bg1.PNG') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .background-container {
+      width: 900px;
+      height: 188px;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+      text-align: center;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .overlay {
+      background-color: rgba(0, 0, 0, 0.4);
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .percentage {
+      font-size: 50px;
+      font-weight: bold;
+      margin-bottom: -10px;
+      text-shadow: 1px 1px 14px rgba(0, 0, 0, 3);
+    }
+
+    .days-text {
+      font-size: 20px;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+      margin: 2px 0;
+    }
+
+    .days-text + .days-text {
+      margin-top: 6px;
+    }
+
+    .gtavidc-link {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      font-size: 13px;
+      color: #8a34db;
+      text-decoration: none;
+      opacity: 0.8;
+      z-index: 1000;
+    }
+
+    .gtavidc-link:hover {
+      text-decoration: underline;
+      opacity: 1;
+    }
+
+    .info-button {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      font-size: 13px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      opacity: 0.85;
+      z-index: 1000;
+    }
+
+    .info-button:hover {
+      opacity: 1;
+    }
+
+    .info-modal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(20, 20, 20, 0.95);
+      padding: 30px;
+      border-radius: 12px;
+      width: 300px;
+      box-shadow: 0 0 20px black;
+      z-index: 2000;
+      text-align: center;
+    }
+
+    .info-modal h2 {
+      margin-top: 0;
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .info-modal p {
+      font-size: 14px;
+      color: #ccc;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      font-size: 18px;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .close-modal:hover {
+      color: #e74c3c;
+    }
+  </style>
+</head>
+<body>
+  <div class="background-container" id="background">
+    <div class="overlay"></div>
+    <div class="content">
+      <div class="percentage" id="percentage">Loading...</div>
+      <div class="days-text" id="daysLeft">Calculating...</div>
+      <div class="days-text" id="daysSince">Calculating...</div>
+
+      <a href="https://discord.com/invite/gta-vi" class="gtavidc-link" target="_blank">GTA 6 UNOFFICIAL DISCORD SERVER</a>
+    </div>
+  </div>
+
+  <button class="info-button" onclick="showInfo()">TANI</button>
+
+  <div class="info-modal" id="infoModal">
+    <div class="close-modal" onclick="hideInfo()">✖</div>
+    <h2>GTA VI COUNTDOWN - TANI </h2>
+    <p>- this website shows current progress to gta vi in percentages - counting started May 2th, same day delay was announced - background updates every 1 minute - its very simple i know but it just works</p>
+  </div>
+
+  <script>
+    const startDate = new Date('2025-05-02T00:00:00Z');
+    const endDate = new Date('2026-05-26T00:00:00Z');
+    const countSinceDate = new Date('2025-05-06T00:00:00Z');
+
+    const backgroundImages = [
+      'background/background.png',
+      'background/background2.png',
+      'background/background3.png',
+      'background/background4.png',
+      'background/background5.png',
+      'background/background6.png'
+    ];
+
+    function updateCountdownInfo() {
+      const now = new Date();
+      const total = endDate - startDate;
+      const elapsed = now - startDate;
+      let percentage = (elapsed / total) * 100;
+      percentage = Math.max(0, Math.min(100, percentage));
+      document.getElementById('percentage').textContent = percentage.toFixed(2) + '%';
+
+      const daysLeft = Math.ceil((endDate - now) / (1000 * 60 * 60 * 24));
+      document.getElementById('daysLeft').textContent = `${daysLeft} Days Left Until Grand Theft Auto VI`;
+
+      const daysSince = Math.floor((now - countSinceDate) / (1000 * 60 * 60 * 24));
+      document.getElementById('daysSince').textContent = `${daysSince} Days Since TRAILER 2`;
+    }
+
+    function updateBackgroundImage() {
+      const randomIndex = Math.floor(Math.random() * backgroundImages.length);
+      const container = document.getElementById('background');
+      container.style.backgroundImage = `url('${backgroundImages[randomIndex]}')`;
+    }
+
+    function showInfo() {
+      document.getElementById('infoModal').style.display = 'block';
+    }
+
+    function hideInfo() {
+      document.getElementById('infoModal').style.display = 'none';
+    }
+
+    updateCountdownInfo();
+    updateBackgroundImage();
+
+    setInterval(() => {
+      updateCountdownInfo();
+      updateBackgroundImage();
+    }, 60 * 1000);
+  </script>
+</body>
+</html>
