@@ -12,8 +12,6 @@
       font-style: normal;
     }
 
-
-	  
     html, body {
       margin: 0;
       padding: 0;
@@ -25,9 +23,6 @@
       display: flex;
       justify-content: center;
       align-items: center;
-
-
-	    
     }
 
     .background-container {
@@ -157,6 +152,9 @@
   <div class="background-container" id="background">
     <div class="overlay"></div>
     <div class="content">
+      <div class="percentage" id="percentage">0.00%</div>
+      <div class="days-text" id="daysLeft">Loading Days Left...</div>
+      <div class="days-text" id="daysSince">Loading Days Since...</div>
     </div>
   </div>
 
@@ -164,8 +162,6 @@
 
   <button class="info-button" onclick="showInfo()">TANI</button>
 
-
-	
   <div class="info-modal" id="infoModal">
     <div class="close-modal" onclick="hideInfo()">✖</div>
     <h2>GTA VI COUNTDOWN - TANI</h2>
@@ -175,17 +171,11 @@
       - it's very simple I know, but it just works</p>
   </div>
 
-	
-
   <script>
     const startDate = new Date('2025-05-02T00:00:00Z');
     const endDate = new Date('2026-05-26T00:00:00Z');
     const countSinceDate = new Date('2025-05-06T00:00:00Z');
 
-
-
-
-	  // "plate" images
     const backgroundImages = [
       'background/background.png',
       'background/background2.png',
@@ -195,11 +185,6 @@
       'background/background6.png'
     ];
 
-
-
-
-
-	  
     function updateCountdownInfo() {
       const now = new Date();
       const total = endDate - startDate;
@@ -236,7 +221,7 @@
     setInterval(() => {
       updateCountdownInfo();
       updateBackgroundImage();
-    }, 60 * 1000);  // when/how often updates
+    }, 60 * 1000);
   </script>
 </body>
 </html>
