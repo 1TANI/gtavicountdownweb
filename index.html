@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>GTA VI COUNTDOWN - - TANI</title>
-	
+  <title>GTA VI COUNTDOWN - TANI</title>
+
   <style>
     @font-face {
       font-family: 'GTAArtDecoMedium';
@@ -12,6 +12,8 @@
       font-style: normal;
     }
 
+
+	  
     html, body {
       margin: 0;
       padding: 0;
@@ -23,6 +25,9 @@
       display: flex;
       justify-content: center;
       align-items: center;
+
+
+	    
     }
 
     .background-container {
@@ -152,26 +157,35 @@
   <div class="background-container" id="background">
     <div class="overlay"></div>
     <div class="content">
-
-      <a href="https://discord.com/invite/gta-vi" class="gtavidc-link" target="_blank">GTA 6 UNOFFICIAL DISCORD SERVER</a>
     </div>
   </div>
 
+  <a href="https://discord.com/invite/gta-vi" class="gtavidc-link" target="_blank">GTA 6 UNOFFICIAL DISCORD SERVER</a>
+
   <button class="info-button" onclick="showInfo()">TANI</button>
 
+
+	
   <div class="info-modal" id="infoModal">
     <div class="close-modal" onclick="hideInfo()">✖</div>
-    <h2>GTA VI COUNTDOWN - TANI </h2>
-    <p>- this website shows current progress to gta vi in percentages - counting started May 2th, same day delay was announced - background updates every 1 minute - its very simple i know but it just works</p>
+    <h2>GTA VI COUNTDOWN - TANI</h2>
+    <p>- this website shows current progress to GTA VI in percentages<br>
+      - counting started May 2nd, same day delay was announced<br>
+      - background updates every 1 minute<br>
+      - it's very simple I know, but it just works</p>
   </div>
+
+	
 
   <script>
     const startDate = new Date('2025-05-02T00:00:00Z');
-	  
     const endDate = new Date('2026-05-26T00:00:00Z');
-	  
     const countSinceDate = new Date('2025-05-06T00:00:00Z');
 
+
+
+
+	  // "plate" images
     const backgroundImages = [
       'background/background.png',
       'background/background2.png',
@@ -181,6 +195,11 @@
       'background/background6.png'
     ];
 
+
+
+
+
+	  
     function updateCountdownInfo() {
       const now = new Date();
       const total = endDate - startDate;
@@ -199,7 +218,6 @@
     function updateBackgroundImage() {
       const randomIndex = Math.floor(Math.random() * backgroundImages.length);
       const container = document.getElementById('background');
-	    
       container.style.backgroundImage = `url('${backgroundImages[randomIndex]}')`;
     }
 
@@ -211,13 +229,14 @@
       document.getElementById('infoModal').style.display = 'none';
     }
 
+    // Initialize
     updateCountdownInfo();
     updateBackgroundImage();
 
     setInterval(() => {
       updateCountdownInfo();
       updateBackgroundImage();
-    }, 60 * 1000); // how/when updates
+    }, 60 * 1000);  // when/how often updates
   </script>
 </body>
 </html>
