@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <title>GTA VI COUNTDOWN - TANI</title>
 
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
   <style>
     @font-face {
       font-family: 'GTAArtDecoMedium';
@@ -11,7 +13,6 @@
       font-weight: normal;
       font-style: normal;
     }
-
     html, body {
       margin: 0;
       padding: 0;
@@ -21,8 +22,10 @@
       background: url('background/bg1.png') no-repeat center center fixed;
       background-size: cover;
       display: flex;
+      flex-direction: column; /* Changed to column to accommodate toolbar at bottom */
       justify-content: center;
       align-items: center;
+      position: relative; /* Needed for toolbar positioning */
     }
 
     .background-container {
@@ -32,7 +35,7 @@
       background-position: center;
       background-repeat: no-repeat;
       position: relative;
-      border-radius: 16px;
+      border-radius: 7px;
       overflow: hidden;
       box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
       text-align: center;
@@ -40,10 +43,12 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
+      z-index: 500;
     }
 
+    
     .overlay {
-      background-color: rgba(0, 0, 0, 0.4);
+      background-color: rgba(0, 0, 0, 0.4); /* Default semi-transparent overlay */
       height: 100%;
       width: 100%;
       position: absolute;
@@ -61,6 +66,17 @@
       font-weight: bold;
       margin-bottom: -10px;
       text-shadow: 1px 1px 14px rgba(0, 0, 0, 3);
+      color: white;
+      animation: pulsateSize 7s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulsateSize {
+      0% {
+        transform: scale(1);
+      }
+      100% {
+        transform: scale(1.04);
+      }
     }
 
     .days-text {
@@ -71,6 +87,25 @@
 
     .days-text + .days-text {
       margin-top: 6px;
+    }
+
+    .days-since-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 6px;
+    }
+
+    .cycle-arrow {
+      font-size: 16px;
+      color: #cccccc;
+      cursor: pointer;
+      margin: 0 18px;
+      transition: color 0.5s ease-in-out;
+    }
+
+    .cycle-arrow:hover {
+      color: #7629ea;
     }
 
     .gtavidc-link {
@@ -89,25 +124,46 @@
       opacity: 1;
     }
 
-    .info-button {
+    .toolbar {
       position: fixed;
-      bottom: 10px;
-      left: 10px;
-      font-size: 13px;
-      background-color: #3498db;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      opacity: 0.85;
+      bottom: 7px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(20, 20, 20, 0.50);
+      padding: 10px 20px;
+      border-radius: 5px;
+      display: flex;
+      gap: 22px; 
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
       z-index: 1000;
     }
 
-    .info-button:hover {
-      opacity: 1;
+    .toolbar button {
+      font-family: 'GTAArtDecoMedium', sans-serif;
+      font-size: 14px;
+      background-color: #971281;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      opacity: 0.9;
+      transition: opacity 0.2s ease-in-out, background-color 0.2s ease-in-out;
     }
 
+    .toolbar button:hover {
+      opacity: 1;
+      background-color: #8a34db;
+    }
+    .toolbar .settings-button img {
+      width: 20px; 
+      height: 20px;
+      vertical-align: middle; 
+      filter: invert(1); 
+    }
+    .toolbar .settings-button {
+      padding: 6px 12px; 
+    }
     .info-modal {
       display: none;
       position: fixed;
@@ -123,17 +179,32 @@
       text-align: center;
     }
 
-    .info-modal h2 {
+
+
+    
+    #settingsModal {
+      display: none; 
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(20, 20, 20, 0.95);
+      padding: 30px;
+      border-radius: 12px;
+      width: 300px;
+      box-shadow: 0 0 20px black;
+      z-index: 2000;
+      text-align: center;
+    }
+    .info-modal h2, #settingsModal h2 {
       margin-top: 0;
       font-size: 20px;
       margin-bottom: 10px;
     }
-
-    .info-modal p {
+    .info-modal p, #settingsModal p {
       font-size: 14px;
       color: #ccc;
     }
-
     .close-modal {
       position: absolute;
       top: 8px;
@@ -142,9 +213,47 @@
       color: #fff;
       cursor: pointer;
     }
-
     .close-modal:hover {
       color: #e74c3c;
+    }
+    .setting-option {
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 0;
+    }
+    .setting-option label {
+      font-size: 16px;
+      color: #ccc;
+      cursor: pointer; 
+    }
+    .setting-option input[type="checkbox"] {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      width: 24px; 
+      height: 24px;
+      border: 2px solid #971281;
+      border-radius: 4px;
+      background-color: #333; 
+      cursor: pointer;
+      position: relative;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+
+    .setting-option input[type="checkbox"]:checked {
+      background-color: #8a34db; 
+      border-color: #8a34db;
+    }
+
+    .setting-option input[type="checkbox"]:checked::before {
+      content: '✓';
+      display: block;
+      color: white;
+      font-size: 18px;
+      text-align: center;
+      line-height: 20px; 
     }
   </style>
 </head>
@@ -153,19 +262,22 @@
     <div class="overlay"></div>
     <div class="content">
       <div class="percentage" id="percentage">0.00%</div>
-      <div class="days-text" id="daysLeft">.</div>
-      <div class="days-text" id="daysSince">.</div>
+      <div class="days-text" id="daysLeft">Loading Days Left...</div>
+      <div class="days-since-container">
+        <span class="cycle-arrow" onclick="toggleDaysSinceMode('previous')">◀</span>
+        <div class="days-text" id="daysSince">Loading Days Since...</div>
+        <span class="cycle-arrow" onclick="toggleDaysSinceMode('next')">▶</span>
+      </div>
     </div>
   </div>
 
-
-
-  
   <a href="https://discord.com/invite/gta-vi" class="gtavidc-link" target="_blank">GTA 6 UNOFFICIAL DISCORD SERVER</a>
 
-
-  
-  <button class="info-button" onclick="showInfo()">TANI</button>
+  <div class="toolbar">
+    <button onclick="showInfo()">INFO</button>
+    <button onclick="showSettings()" class="settings-button"><img src="gear.png" alt="settings"></button>
+    <button onclick="saveAsPNG()">SAVE AS PNG</button>
+  </div>
 
   <div class="info-modal" id="infoModal">
     <div class="close-modal" onclick="hideInfo()">✖</div>
@@ -175,60 +287,157 @@
       - it's very simple I know, but it just works</p>
   </div>
 
+  <div id="settingsModal">
+    <div class="close-modal" onclick="hideSettings()">✖</div>
+    <h2>Settings</h2>
+    <div class="setting-option">
+      <label for="toggleArrows">Hide Cycle Arrows:</label>
+      <input type="checkbox" id="toggleArrows">
+    </div>
+    </div>
+
+
   <script>
-    const startDate = new Date('2025-05-02T00:00:00Z');    // may 2nd
-    const endDate = new Date('2026-05-26T00:00:00Z');      // may 26th, 2026
-    const countSinceDate = new Date('2025-05-06T00:00:00Z');   // trailer 2 date
 
+    const startDate = new Date('2025-05-02T00:00:00Z');
 
+    const release = new Date('2026-05-26T00:00:00Z');
 
-    // "plate" images
-    const backgroundImages = [
-      'background/background.PNG',
-      'background/background2.PNG',
-      'background/background3.PNG',
-      'background/background4.PNG',
-      'background/background5.PNG',
-      'background/background6.PNG'
-    ];
+    const trailer2release = new Date('2025-05-06T00:00:00Z');
+
+    const daysSinceModes = ['days', 'hours', 'minutes', 'seconds'];
+    let currentDaysSinceModeIndex = 0;
+    let secondsUpdateInterval;
 
     function updateCountdownInfo() {
       const now = new Date();
-      const total = endDate - startDate;
+      const total = release - startDate;
       const elapsed = now - startDate;
       let percentage = (elapsed / total) * 100;
       percentage = Math.max(0, Math.min(100, percentage));
       document.getElementById('percentage').textContent = percentage.toFixed(2) + '%';
 
-      const daysLeft = Math.ceil((endDate - now) / (1000 * 60 * 60 * 24));
+      const daysLeft = Math.ceil((release - now) / (1000 * 60 * 60 * 24));
       document.getElementById('daysLeft').textContent = `${daysLeft} Days Left Until Grand Theft Auto VI`;
 
-      const daysSince = Math.floor((now - countSinceDate) / (1000 * 60 * 60 * 24));
-      document.getElementById('daysSince').textContent = `${daysSince} Days Since TRAILER 2`;
+      const msSince = now - trailer2release;
+      const daysSince = Math.floor(msSince / (1000 * 60 * 60 * 24));
+      const hoursSince = Math.floor(msSince / (1000 * 60 * 60));
+      const minutesSince = Math.floor(msSince / (1000 * 60));
+      const secondsSince = Math.floor(msSince / 1000);
+
+      const daysSinceElement = document.getElementById('daysSince');
+      const currentMode = daysSinceModes[currentDaysSinceModeIndex];
+
+      switch (currentMode) {
+        case 'days':
+          daysSinceElement.textContent = `${daysSince} Days Since TRAILER 2`;
+          break;
+        case 'hours':
+          daysSinceElement.textContent = `${hoursSince} Hours Since TRAILER 2`;
+          break;
+        case 'minutes':
+          daysSinceElement.textContent = `${minutesSince} Minutes Since TRAILER 2`;
+          break;
+        case 'seconds':
+          daysSinceElement.textContent = `${secondsSince} Seconds Since TRAILER 2`;
+          break;
+      }
     }
 
-    function updateBackgroundImage() {
-      const randomIndex = Math.floor(Math.random() * backgroundImages.length);
-      const container = document.getElementById('background');
-      container.style.backgroundImage = `url('${backgroundImages[randomIndex]}')`;
+    function toggleDaysSinceMode(direction) {
+      if (direction === 'next') {
+        currentDaysSinceModeIndex = (currentDaysSinceModeIndex + 1) % daysSinceModes.length;
+      } else if (direction === 'previous') {
+        currentDaysSinceModeIndex = (currentDaysSinceModeIndex - 1 + daysSinceModes.length) % daysSinceModes.length;
+      }
+
+      clearInterval(secondsUpdateInterval);
+      clearInterval(window.mainCountdownInterval);
+      setupMainUpdateInterval();
+      updateCountdownInfo();
+    }
+
+    function setupMainUpdateInterval() {
+      clearInterval(window.mainCountdownInterval);
+      clearInterval(secondsUpdateInterval);
+
+      if (daysSinceModes[currentDaysSinceModeIndex] === 'seconds') {
+        secondsUpdateInterval = setInterval(updateCountdownInfo, 1000);
+      } else {
+        window.mainCountdownInterval = setInterval(() => {
+          updateCountdownInfo();
+        }, 60 * 1000);
+      }
     }
 
     function showInfo() {
       document.getElementById('infoModal').style.display = 'block';
     }
-
     function hideInfo() {
       document.getElementById('infoModal').style.display = 'none';
     }
+    function showSettings() {
+      document.getElementById('settingsModal').style.display = 'block';
+    }
+    function hideSettings() {
+      document.getElementById('settingsModal').style.display = 'none';
+    }
 
-    // Initialize
-    updateCountdownInfo();
-    updateBackgroundImage();
 
-    setInterval(() => {
+    function updateArrowVisibility() {
+      const toggleArrowsCheckbox = document.getElementById('toggleArrows');
+      const cycleArrows = document.querySelectorAll('.cycle-arrow');
+      
+      if (toggleArrowsCheckbox && cycleArrows.length > 0) {
+        const hideArrows = toggleArrowsCheckbox.checked;
+        cycleArrows.forEach(arrow => {
+          arrow.style.display = hideArrows ? 'none' : 'inline-block';
+        });
+        localStorage.setItem('hideArrows', hideArrows); 
+      }
+    }
+
+    function saveAsPNG() {
+        const elementToCapture = document.getElementById('background');
+        const overlayElement = elementToCapture.querySelector('.overlay');
+
+        const originalOverlayBg = overlayElement.style.backgroundColor;
+
+        // Temp black background 
+        overlayElement.style.backgroundColor = 'rgba(0, 0, 0, 1)';
+
+        html2canvas(elementToCapture, {
+            backgroundColor: null,
+            useCORS: true
+        }).then(canvas => {
+            overlayElement.style.backgroundColor = originalOverlayBg; 
+
+            const link = document.createElement('a');
+            link.download = 'gta6_countdown.png';
+            link.href = canvas.toDataURL('image/png');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }).catch(err => {
+            console.error("Error saving image:", err);
+            alert("Error");
+            overlayElement.style.backgroundColor = originalOverlayBg; 
+        });
+    }
+    document.addEventListener('DOMContentLoaded', () => {
       updateCountdownInfo();
-      updateBackgroundImage();
-    }, 60 * 1000); // when/how often updates
+      setupMainUpdateInterval();
+
+      const toggleArrowsCheckbox = document.getElementById('toggleArrows');
+      if (toggleArrowsCheckbox) {
+        toggleArrowsCheckbox.addEventListener('change', updateArrowVisibility);
+
+        const hideArrowsPreference = localStorage.getItem('hideArrows') === 'true';
+        toggleArrowsCheckbox.checked = hideArrowsPreference; 
+        updateArrowVisibility(); 
+      }
+    });
   </script>
 </body>
 </html>
