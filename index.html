@@ -155,13 +155,15 @@
       opacity: 1;
       background-color: #8a34db;
     }
-    .toolbar .settings-button img {
+    .toolbar .settings-button img,
+    .toolbar .achievements-button img {
       width: 20px; 
       height: 20px;
       vertical-align: middle; 
       filter: invert(1); 
     }
-    .toolbar .settings-button {
+    .toolbar .settings-button,
+    .toolbar .achievements-button {
       padding: 6px 12px; 
     }
     .info-modal {
@@ -179,8 +181,6 @@
       text-align: center;
     }
 
-
-
     
     #settingsModal {
       display: none; 
@@ -196,10 +196,28 @@
       z-index: 2000;
       text-align: center;
     }
-    .info-modal h2, #settingsModal h2 {
+    
+    #achievementsModal {
+      display: none; 
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(20, 20, 20, 0.95);
+      padding: 30px;
+      border-radius: 12px;
+      width: 400px;
+      max-height: 500px;
+      overflow-y: auto;
+      box-shadow: 0 0 20px black;
+      z-index: 2000;
+    }
+    
+    .info-modal h2, #settingsModal h2, #achievementsModal h2 {
       margin-top: 0;
       font-size: 20px;
       margin-bottom: 10px;
+      text-align: center;
     }
     .info-modal p, #settingsModal p {
       font-size: 14px;
@@ -255,6 +273,65 @@
       text-align: center;
       line-height: 20px; 
     }
+    
+    /* Achievements styles */
+    .achievement-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 5px;
+      background-color: rgba(50, 50, 50, 0.5);
+    }
+    
+    .achievement-icon {
+      width: 40px;
+      height: 40px;
+      margin-right: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background-color: #8a34db;
+    }
+    
+    .achievement-icon.unlocked {
+      background-color: #8a34db;
+    }
+    
+    .achievement-icon.locked {
+      background-color: #333;
+      color: #666;
+    }
+    
+    .achievement-details {
+      flex: 1;
+      text-align: left;
+    }
+    
+    .achievement-title {
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+    
+    .achievement-description {
+      font-size: 12px;
+      color: #ccc;
+    }
+    
+    .achievement-date {
+      font-size: 12px;
+      color: #999;
+      margin-top: 3px;
+    }
+    
+    .achievement-item.unlocked {
+      opacity: 1;
+    }
+    
+    .achievement-item.locked {
+      opacity: 0.6;
+    }
   </style>
 </head>
 <body>
@@ -275,6 +352,7 @@
 
   <div class="toolbar">
     <button onclick="showInfo()">INFO</button>
+    <button onclick="showAchievements()" class="achievements-button"><img src="trophy.png" alt="achievements"></button>
     <button onclick="showSettings()" class="settings-button"><img src="gear.png" alt="settings"></button>
     <button onclick="saveAsPNG()">SAVE AS PNG</button>
   </div>
@@ -294,20 +372,38 @@
       <label for="toggleArrows">Hide Cycle Arrows:</label>
       <input type="checkbox" id="toggleArrows">
     </div>
-    </div>
+  </div>
+  
+  <div id="achievementsModal">
+    <div class="close-modal" onclick="hideAchievements()">✖</div>
+    <h2>PROGRESS</h2>
+    <div id="achievementsList">
 
+    </div>
+  </div>
 
   <script>
-
     const startDate = new Date('2025-05-02T12:00:00Z');
-
     const release = new Date('2026-05-25T00:00:00Z');
-
     const trailer2release = new Date('2025-05-06T13:00:00Z');
 
     const daysSinceModes = ['days', 'hours', 'minutes', 'seconds'];
     let currentDaysSinceModeIndex = 0;
     let secondsUpdateInterval;
+
+const achievements = [
+  { id: 1, title: "10%", description: "Reach 10% completion", targetPercentage: 10, targetDate: new Date('2025-06-25T00:00:00Z') },
+  { id: 2, title: "20%", description: "Reach 20% completion", targetPercentage: 20, targetDate: new Date('2025-08-01T00:00:00Z') },
+  { id: 3, title: "30%", description: "Reach 30% completion", targetPercentage: 30, targetDate: new Date('2025-09-10T00:00:00Z') },
+  { id: 4, title: "38.1%", description: "Reach 38.1% completion", targetPercentage: 38.1, targetDate: new Date('2025-10-15T00:00:00Z') },
+  { id: 5, title: "40%", description: "Reach 40% completion", targetPercentage: 40, targetDate: new Date('2025-10-25T00:00:00Z') },
+  { id: 6, title: "50%", description: "Reach 50% completion", targetPercentage: 50, targetDate: new Date('2025-11-12T00:00:00Z') },
+  { id: 7, title: "VI0%", description: "Reach 60% completion", targetPercentage: 60, targetDate: new Date('2026-01-05T00:00:00Z') },
+  { id: 8, title: "69420", description: "Nice.", targetPercentage: 69.42, targetDate: new Date('2026-02-10T00:00:00Z') },
+  { id: 9, title: "70%", description: "Reach 70% completion", targetPercentage: 70, targetDate: new Date('2026-02-15T00:00:00Z') },
+  { id: 10, title: "90%", description: "Reach 90% completion", targetPercentage: 90, targetDate: new Date('2026-04-10T00:00:00Z') },
+  { id: 11, title: "ULTIMATE LUCIA GTA 6", description: "Reach 100% completion", targetPercentage: 100, targetDate: new Date('2026-05-25T00:00:00Z') }
+];
 
     function updateCountdownInfo() {
       const now = new Date();
@@ -343,6 +439,32 @@
           daysSinceElement.textContent = `${secondsSince} Seconds Since TRAILER 2`;
           break;
       }
+      
+      updateAchievementsDisplay(percentage);
+    }
+
+    function updateAchievementsDisplay(currentPercentage) {
+      const achievementsList = document.getElementById('achievementsList');
+      achievementsList.innerHTML = '';
+      
+      achievements.forEach(achievement => {
+        const isUnlocked = currentPercentage >= achievement.targetPercentage;
+        const achievementItem = document.createElement('div');
+        achievementItem.className = `achievement-item ${isUnlocked ? 'unlocked' : 'locked'}`;
+        
+        achievementItem.innerHTML = `
+          <div class="achievement-icon ${isUnlocked ? 'unlocked' : 'locked'}">
+            ${isUnlocked ? '🏆' : '🔒'}
+          </div>
+          <div class="achievement-details">
+            <div class="achievement-title">${achievement.title}</div>
+            <div class="achievement-description">${achievement.description}</div>
+            <div class="achievement-date">Target: ${achievement.targetDate.toLocaleDateString()}</div>
+          </div>
+        `;
+        
+        achievementsList.appendChild(achievementItem);
+      });
     }
 
     function toggleDaysSinceMode(direction) {
@@ -383,7 +505,12 @@
     function hideSettings() {
       document.getElementById('settingsModal').style.display = 'none';
     }
-
+    function showAchievements() {
+      document.getElementById('achievementsModal').style.display = 'block';
+    }
+    function hideAchievements() {
+      document.getElementById('achievementsModal').style.display = 'none';
+    }
 
     function updateArrowVisibility() {
       const toggleArrowsCheckbox = document.getElementById('toggleArrows');
@@ -404,7 +531,7 @@
 
         const originalOverlayBg = overlayElement.style.backgroundColor;
 
-        // Temp black background 
+        // Temp black background after saving image
         overlayElement.style.backgroundColor = 'rgba(0, 0, 0, 1)';
 
         html2canvas(elementToCapture, {
@@ -425,6 +552,7 @@
             overlayElement.style.backgroundColor = originalOverlayBg; 
         });
     }
+    
     document.addEventListener('DOMContentLoaded', () => {
       updateCountdownInfo();
       setupMainUpdateInterval();
@@ -441,4 +569,3 @@
   </script>
 </body>
 </html>
-
