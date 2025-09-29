@@ -5,6 +5,7 @@
   <title>GTA VI COUNTDOWN - TANI</title>
 
   <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
 
   <style>
     @font-face {
@@ -13,19 +14,54 @@
       font-weight: normal;
       font-style: normal;
     }
-    html, body {
+    
+    * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+    }
+    
+    html, body {
       height: 100%;
       font-family: 'GTAArtDecoMedium', sans-serif;
       color: white;
-      background: url('background/bg1.png') no-repeat center center fixed;
+      overflow: hidden;
+    }
+
+    /* Background layers */
+    .background-layer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      transition: opacity 0.5s ease-in-out;
+      z-index: 1;
+    }
+    
+    #bg1 {
+      background-image: url('background/bg1.png');
+      opacity: 1;
+    }
+    
+    #bg2 {
+      background-image: url('background/bg2.png');
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .content-wrapper {
+      position: relative;
+      z-index: 500;
       display: flex;
-      flex-direction: column; 
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      position: relative; 
+      height: 100%;
+      width: 100%;
     }
 
     .background-container {
@@ -43,7 +79,6 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      z-index: 500;
     }
 
     
@@ -332,21 +367,66 @@
     .achievement-item.locked {
       opacity: 0.6;
     }
+    
+    /* New right arrow button styles */
+    .right-arrow-button {
+      position: fixed;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 40px;
+      color: white;
+      background-color: rgba(0, 0, 0, 0.3);
+      border: none;
+      border-radius: 5px;
+      width: 50px;
+      height: 80px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.3s ease-in-out, opacity 0.3s ease-in-out;
+      opacity: 0.3;
+      z-index: 1000;
+    }
+    
+    .right-arrow-button:hover {
+      opacity: 0.7;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+    
+    /* Date range text styles */
+    .date-range-text {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.7);
+      text-align: center;
+      margin-bottom: 10px;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    }
   </style>
 </head>
 <body>
-  <div class="background-container" id="background">
-    <div class="overlay"></div>
-    <div class="content">
-      <div class="percentage" id="percentage">0.00%</div>
-      <div class="days-text" id="daysLeft">Loading Days Left...</div>
-      <div class="days-since-container">
-        <span class="cycle-arrow" onclick="toggleDaysSinceMode('previous')">◀</span>
-        <div class="days-text" id="daysSince">Loading Days Since...</div>
-        <span class="cycle-arrow" onclick="toggleDaysSinceMode('next')">▶</span>
+  <!-- Background layers -->
+  <div class="background-layer" id="bg1"></div>
+  <div class="background-layer" id="bg2"></div>
+
+  <div class="content-wrapper">
+    <div class="background-container">
+      <div class="overlay"></div>
+      <div class="content">
+        <div class="date-range-text" id="dateRangeText" style="display: none;">From May 2nd 2025, To November 25th</div>
+        <div class="percentage" id="percentage">0.00%</div>
+        <div class="days-text" id="daysLeft">Loading Days Left...</div>
+        <div class="days-since-container">
+          <span class="cycle-arrow" onclick="toggleDaysSinceMode('previous')">◀</span>
+          <div class="days-text" id="daysSince">Loading Days Since...</div>
+          <span class="cycle-arrow" onclick="toggleDaysSinceMode('next')">▶</span>
+        </div>
       </div>
     </div>
   </div>
+
+  <button class="right-arrow-button" onclick="toggleCalculationMode()">></button>
 
   <a href="https://discord.com/invite/gta-vi" class="gtavidc-link" target="_blank">GTA 6 UNOFFICIAL DISCORD SERVER</a>
 
@@ -383,64 +463,99 @@
   </div>
 
   <script>
-    const startDate = new Date('2025-05-02T12:00:00Z');
-    const release = new Date('2026-05-25T00:00:00Z');
-    const trailer2release = new Date('2025-05-06T13:00:00Z');
+    
+    // May 2nd 2025, 4:00 PM GMT+3 = 13:00 UTC
+    const startDate = new Date('2025-05-02T13:00:00Z');
+    
+    // May 25th 2026, 6:00 AM GMT+3 = 03:00 UTC  
+    const release = new Date('2026-05-25T03:00:00Z');
+    
+    // May 2nd 2025, 4:00 PM GMT+3 = 13:00 UTC 
+    const altStartDate = new Date('2025-05-02T13:00:00Z');
+    
+    // Nov 25th 2025, 4:00 PM GMT+3 = 13:00 UTC 
+    const altEndDate = new Date('2025-11-25T13:00:00Z');
+    
+    // May 6th 2025, 4:30 PM GMT+3 = 13:30 UTC
+    const trailer2release = new Date('2025-05-06T13:30:00Z');
 
     const daysSinceModes = ['days', 'hours', 'minutes', 'seconds'];
     let currentDaysSinceModeIndex = 0;
     let secondsUpdateInterval;
+    let isAlternativeMode = false;
 
-const achievements = [
-  { id: 1, title: "10%", description: "Reach 10% completion", targetPercentage: 10, targetDate: new Date('2025-06-25T00:00:00Z') },
-  { id: 2, title: "20%", description: "Reach 20% completion", targetPercentage: 20, targetDate: new Date('2025-08-01T00:00:00Z') },
-  { id: 3, title: "30%", description: "Reach 30% completion", targetPercentage: 30, targetDate: new Date('2025-09-10T00:00:00Z') },
-  { id: 4, title: "38.1%", description: "Reach 38.1% completion", targetPercentage: 38.1, targetDate: new Date('2025-10-15T00:00:00Z') },
-  { id: 5, title: "40%", description: "Reach 40% completion", targetPercentage: 40, targetDate: new Date('2025-10-25T00:00:00Z') },
-  { id: 6, title: "50%", description: "Reach 50% completion", targetPercentage: 50, targetDate: new Date('2025-11-12T00:00:00Z') },
-  { id: 7, title: "VI0%", description: "Reach 60% completion", targetPercentage: 60, targetDate: new Date('2026-01-05T00:00:00Z') },
-  { id: 8, title: "69420", description: "Nice.", targetPercentage: 69.42, targetDate: new Date('2026-02-10T00:00:00Z') },
-  { id: 9, title: "70%", description: "Reach 70% completion", targetPercentage: 70, targetDate: new Date('2026-02-15T00:00:00Z') },
-  { id: 10, title: "90%", description: "Reach 90% completion", targetPercentage: 90, targetDate: new Date('2026-04-10T00:00:00Z') },
-  { id: 11, title: "ULTIMATE LUCIA GTA 6", description: "Reach 100% completion", targetPercentage: 100, targetDate: new Date('2026-05-25T00:00:00Z') }
-];
+    const achievements = [
+      { id: 1, title: "10%", description: "Reach 10% completion", targetPercentage: 10, targetDate: new Date('2025-06-25T13:00:00Z') },
+      { id: 2, title: "20%", description: "Reach 20% completion", targetPercentage: 20, targetDate: new Date('2025-08-01T13:00:00Z') },
+      { id: 3, title: "30%", description: "Reach 30% completion", targetPercentage: 30, targetDate: new Date('2025-09-10T13:00:00Z') },
+      { id: 4, title: "38.1%", description: "Reach 38.1% completion", targetPercentage: 38.1, targetDate: new Date('2025-10-15T13:00:00Z') },
+      { id: 5, title: "40%", description: "Reach 40% completion", targetPercentage: 40, targetDate: new Date('2025-10-25T13:00:00Z') },
+      { id: 6, title: "50%", description: "Reach 50% completion", targetPercentage: 50, targetDate: new Date('2025-11-12T13:00:00Z') },
+      { id: 7, title: "VI0%", description: "Reach 60% completion", targetPercentage: 60, targetDate: new Date('2026-01-05T13:00:00Z') },
+      { id: 8, title: "69420", description: "Nice.", targetPercentage: 69.42, targetDate: new Date('2026-02-10T13:00:00Z') },
+      { id: 9, title: "70%", description: "Reach 70% completion", targetPercentage: 70, targetDate: new Date('2026-02-15T13:00:00Z') },
+      { id: 10, title: "90%", description: "Reach 90% completion", targetPercentage: 90, targetDate: new Date('2026-04-10T13:00:00Z') },
+      { id: 11, title: "ULTIMATE LUCIA GTA 6", description: "Reach 100% completion", targetPercentage: 100, targetDate: new Date('2026-05-25T03:00:00Z') }
+    ];
 
     function updateCountdownInfo() {
       const now = new Date();
-      const total = release - startDate;
-      const elapsed = now - startDate;
-      let percentage = (elapsed / total) * 100;
-      percentage = Math.max(0, Math.min(100, percentage));
-      document.getElementById('percentage').textContent = percentage.toFixed(2) + '%';
+      
+      let percentage, daysLeft, daysSinceText;
+      
+      if (isAlternativeMode) {
+        const total = altEndDate - altStartDate;
+        const elapsed = now - altStartDate;
+        percentage = (elapsed / total) * 100;
+        percentage = Math.max(0, Math.min(100, percentage));
+        
+        daysLeft = Math.ceil((altEndDate - now) / (1000 * 60 * 60 * 24));
+        document.getElementById('daysLeft').textContent = `${daysLeft} Days Left Until November 25th 2025          ( trailer 3 window )`;
+        
+        document.querySelector('.days-since-container').style.display = 'none';
+        document.getElementById('dateRangeText').style.display = 'block';
+      } else {
+        const total = release - startDate;
+        const elapsed = now - startDate;
+        percentage = (elapsed / total) * 100;
+        percentage = Math.max(0, Math.min(100, percentage));
+        
+        daysLeft = Math.ceil((release - now) / (1000 * 60 * 60 * 24));
+        document.getElementById('daysLeft').textContent = `${daysLeft} Days Left Until Grand Theft Auto VI`;
+        
+        document.querySelector('.days-since-container').style.display = 'flex';
+        document.getElementById('dateRangeText').style.display = 'none';
+        
+        const msSince = now - trailer2release;
+        const daysSince = Math.floor(msSince / (1000 * 60 * 60 * 24));
+        const hoursSince = Math.floor(msSince / (1000 * 60 * 60));
+        const minutesSince = Math.floor(msSince / (1000 * 60));
+        const secondsSince = Math.floor(msSince / 1000);
 
-      const daysLeft = Math.ceil((release - now) / (1000 * 60 * 60 * 24));
-      document.getElementById('daysLeft').textContent = `${daysLeft} Days Left Until Grand Theft Auto VI`;
+        const daysSinceElement = document.getElementById('daysSince');
+        const currentMode = daysSinceModes[currentDaysSinceModeIndex];
 
-      const msSince = now - trailer2release;
-      const daysSince = Math.floor(msSince / (1000 * 60 * 60 * 24));
-      const hoursSince = Math.floor(msSince / (1000 * 60 * 60));
-      const minutesSince = Math.floor(msSince / (1000 * 60));
-      const secondsSince = Math.floor(msSince / 1000);
-
-      const daysSinceElement = document.getElementById('daysSince');
-      const currentMode = daysSinceModes[currentDaysSinceModeIndex];
-
-      switch (currentMode) {
-        case 'days':
-          daysSinceElement.textContent = `${daysSince} Days Since TRAILER 2`;
-          break;
-        case 'hours':
-          daysSinceElement.textContent = `${hoursSince} Hours Since TRAILER 2`;
-          break;
-        case 'minutes':
-          daysSinceElement.textContent = `${minutesSince} Minutes Since TRAILER 2`;
-          break;
-        case 'seconds':
-          daysSinceElement.textContent = `${secondsSince} Seconds Since TRAILER 2`;
-          break;
+        switch (currentMode) {
+          case 'days':
+            daysSinceElement.textContent = `${daysSince} Days Since TRAILER 2`;
+            break;
+          case 'hours':
+            daysSinceElement.textContent = `${hoursSince} Hours Since TRAILER 2`;
+            break;
+          case 'minutes':
+            daysSinceElement.textContent = `${minutesSince} Minutes Since TRAILER 2`;
+            break;
+          case 'seconds':
+            daysSinceElement.textContent = `${secondsSince} Seconds Since TRAILER 2`;
+            break;
+        }
       }
       
-      updateAchievementsDisplay(percentage);
+      document.getElementById('percentage').textContent = percentage.toFixed(2) + '%';
+      
+      if (!isAlternativeMode) {
+        updateAchievementsDisplay(percentage);
+      }
     }
 
     function updateAchievementsDisplay(currentPercentage) {
@@ -484,13 +599,47 @@ const achievements = [
       clearInterval(window.mainCountdownInterval);
       clearInterval(secondsUpdateInterval);
 
-      if (daysSinceModes[currentDaysSinceModeIndex] === 'seconds') {
+      if (!isAlternativeMode && daysSinceModes[currentDaysSinceModeIndex] === 'seconds') {
         secondsUpdateInterval = setInterval(updateCountdownInfo, 1000);
       } else {
         window.mainCountdownInterval = setInterval(() => {
           updateCountdownInfo();
         }, 60 * 1000);
       }
+    }
+
+    function toggleCalculationMode() {
+      isAlternativeMode = !isAlternativeMode;
+      
+      const bg1 = document.getElementById('bg1');
+      const bg2 = document.getElementById('bg2');
+      
+      if (isAlternativeMode) {
+        // Fade to bg2
+        bg2.style.pointerEvents = 'auto';
+        bg1.style.opacity = '0';
+        setTimeout(() => {
+          bg2.style.opacity = '1';
+        }, 50);
+      } else {
+        // Fade to bg1
+        bg2.style.pointerEvents = 'none';
+        bg2.style.opacity = '0';
+        setTimeout(() => {
+          bg1.style.opacity = '1';
+        }, 50);
+      }
+      
+      const achievementsButton = document.querySelector('.achievements-button');
+      if (achievementsButton) {
+        achievementsButton.style.display = isAlternativeMode ? 'none' : 'inline-block';
+      }
+      
+      // Update instant.
+      clearInterval(secondsUpdateInterval);
+      clearInterval(window.mainCountdownInterval);
+      updateCountdownInfo();
+      setupMainUpdateInterval();
     }
 
     function showInfo() {
@@ -506,7 +655,9 @@ const achievements = [
       document.getElementById('settingsModal').style.display = 'none';
     }
     function showAchievements() {
-      document.getElementById('achievementsModal').style.display = 'block';
+      if (!isAlternativeMode) {
+        document.getElementById('achievementsModal').style.display = 'block';
+      }
     }
     function hideAchievements() {
       document.getElementById('achievementsModal').style.display = 'none';
