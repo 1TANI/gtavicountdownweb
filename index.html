@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>GTA VI COUNTDOWN - TANI</title>
 
-  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
 
   <style>
@@ -26,31 +25,7 @@
       font-family: 'GTAArtDecoMedium', sans-serif;
       color: white;
       overflow: hidden;
-    }
-
-    /* Background layers */
-    .background-layer {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      transition: opacity 0.5s ease-in-out;
-      z-index: 1;
-    }
-    
-    #bg1 {
-      background-image: url('background/bg1.png');
-      opacity: 1;
-    }
-    
-    #bg2 {
-      background-image: url('background/bg2.png');
-      opacity: 0;
-      pointer-events: none;
+      background-color: #121212;
     }
 
     .content-wrapper {
@@ -65,23 +40,21 @@
     }
 
     .background-container {
-      width: 900px;
-      height: 188px;
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
+      width: 1100px;
+      height: 280px;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
       position: relative;
-      border-radius: 7px;
+      border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
       text-align: center;
-      padding: 20px;
+      padding: 30px;
       display: flex;
       flex-direction: column;
       justify-content: center;
+      border: 1px solid #444;
     }
 
-    
     .overlay {
       background-color: rgba(0, 0, 0, 0.4); 
       height: 100%;
@@ -97,9 +70,9 @@
     }
 
     .percentage {
-      font-size: 50px;
+      font-size: 80px;
       font-weight: bold;
-      margin-bottom: -10px;
+      margin-bottom: 5px;
       text-shadow: 1px 1px 14px rgba(0, 0, 0, 3);
       color: white;
       animation: pulsateSize 7s ease-in-out infinite alternate;
@@ -115,32 +88,32 @@
     }
 
     .days-text {
-      font-size: 20px;
+      font-size: 28px;
       text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-      margin: 2px 0;
+      margin: 8px 0;
     }
 
     .days-text + .days-text {
-      margin-top: 6px;
+      margin-top: 12px;
     }
 
     .days-since-container {
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-top: 6px;
+      margin-top: 12px;
     }
 
     .cycle-arrow {
-      font-size: 16px;
+      font-size: 24px;
       color: #cccccc;
       cursor: pointer;
-      margin: 0 18px;
+      margin: 0 24px;
       transition: color 0.5s ease-in-out;
     }
 
     .cycle-arrow:hover {
-      color: #7629ea;
+      color: #ffb0c4;
     }
 
     .gtavidc-link {
@@ -148,7 +121,7 @@
       bottom: 10px;
       right: 10px;
       font-size: 13px;
-      color: #8a34db;
+      color: #ffb0c4;
       text-decoration: none;
       opacity: 0.8;
       z-index: 1000;
@@ -159,125 +132,73 @@
       opacity: 1;
     }
 
-    .toolbar {
-      position: fixed;
-      bottom: 7px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: rgba(20, 20, 20, 0.50);
-      padding: 10px 20px;
-      border-radius: 5px;
-      display: flex;
-      gap: 22px; 
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-      z-index: 1000;
-    }
-
-    .toolbar button {
-      font-family: 'GTAArtDecoMedium', sans-serif;
-      font-size: 14px;
-      background-color: #971281;
-      color: white;
-      border: none;
-      padding: 8px 15px;
-      border-radius: 4px;
-      cursor: pointer;
-      opacity: 0.9;
-      transition: opacity 0.2s ease-in-out, background-color 0.2s ease-in-out;
-    }
-
-    .toolbar button:hover {
-      opacity: 1;
-      background-color: #8a34db;
-    }
-    .toolbar .settings-button img,
-    .toolbar .achievements-button img {
-      width: 20px; 
-      height: 20px;
-      vertical-align: middle; 
-      filter: invert(1); 
-    }
-    .toolbar .settings-button,
-    .toolbar .achievements-button {
-      padding: 6px 12px; 
-    }
-    .info-modal {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: rgba(20, 20, 20, 0.95);
-      padding: 30px;
-      border-radius: 12px;
-      width: 300px;
-      box-shadow: 0 0 20px black;
-      z-index: 2000;
-      text-align: center;
-    }
-
-    
     #settingsModal {
       display: none; 
       position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: rgba(20, 20, 20, 0.95);
-      padding: 30px;
-      border-radius: 12px;
-      width: 300px;
-      box-shadow: 0 0 20px black;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(10, 10, 10, 0.95);
       z-index: 2000;
-      text-align: center;
+      overflow-y: auto;
+      padding: 40px;
+    }
+    
+    .settings-content {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: rgba(30, 30, 30, 0.9);
+      border-radius: 12px;
+      padding: 40px;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
     }
     
     #achievementsModal {
       display: none; 
       position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: rgba(20, 20, 20, 0.95);
-      padding: 30px;
-      border-radius: 12px;
-      width: 400px;
-      max-height: 500px;
-      overflow-y: auto;
-      box-shadow: 0 0 20px black;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(10, 10, 10, 0.95);
       z-index: 2000;
+      overflow-y: auto;
+      padding: 40px;
     }
     
-    .info-modal h2, #settingsModal h2, #achievementsModal h2 {
-      margin-top: 0;
-      font-size: 20px;
-      margin-bottom: 10px;
-      text-align: center;
+    .achievements-content {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: rgba(30, 30, 30, 0.9);
+      border-radius: 12px;
+      padding: 40px;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
     }
-    .info-modal p, #settingsModal p {
-      font-size: 14px;
-      color: #ccc;
-    }
+    
     .close-modal {
       position: absolute;
-      top: 8px;
-      right: 12px;
-      font-size: 18px;
+      top: 15px;
+      right: 20px;
+      font-size: 24px;
       color: #fff;
       cursor: pointer;
+      z-index: 2001;
     }
     .close-modal:hover {
       color: #e74c3c;
     }
     .setting-option {
-      margin-bottom: 15px;
+      margin-bottom: 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 5px 0;
+      padding: 15px;
+      background-color: rgba(50, 50, 50, 0.5);
+      border-radius: 8px;
     }
     .setting-option label {
-      font-size: 16px;
+      font-size: 18px;
       color: #ccc;
       cursor: pointer; 
     }
@@ -285,8 +206,8 @@
       -webkit-appearance: none;
       -moz-appearance: none;
       appearance: none;
-      width: 24px; 
-      height: 24px;
+      width: 28px; 
+      height: 28px;
       border: 2px solid #971281;
       border-radius: 4px;
       background-color: #333; 
@@ -304,25 +225,24 @@
       content: '✓';
       display: block;
       color: white;
-      font-size: 18px;
+      font-size: 20px;
       text-align: center;
-      line-height: 20px; 
+      line-height: 24px; 
     }
     
-    /* Achievements styles */
     .achievement-item {
       display: flex;
       align-items: center;
-      margin-bottom: 15px;
-      padding: 10px;
-      border-radius: 5px;
+      margin-bottom: 20px;
+      padding: 15px;
+      border-radius: 8px;
       background-color: rgba(50, 50, 50, 0.5);
     }
     
     .achievement-icon {
-      width: 40px;
-      height: 40px;
-      margin-right: 15px;
+      width: 50px;
+      height: 50px;
+      margin-right: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -345,19 +265,19 @@
     }
     
     .achievement-title {
-      font-size: 16px;
-      margin-bottom: 5px;
+      font-size: 20px;
+      margin-bottom: 8px;
     }
     
     .achievement-description {
-      font-size: 12px;
+      font-size: 16px;
       color: #ccc;
     }
     
     .achievement-date {
-      font-size: 12px;
+      font-size: 14px;
       color: #999;
-      margin-top: 3px;
+      margin-top: 5px;
     }
     
     .achievement-item.unlocked {
@@ -368,53 +288,139 @@
       opacity: 0.6;
     }
     
-    /* New right arrow button styles */
-    .right-arrow-button {
-      position: fixed;
-      right: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 40px;
-      color: white;
-      background-color: rgba(0, 0, 0, 0.3);
-      border: none;
-      border-radius: 5px;
-      width: 50px;
-      height: 80px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background-color 0.3s ease-in-out, opacity 0.3s ease-in-out;
-      opacity: 0.3;
-      z-index: 1000;
-    }
-    
-    .right-arrow-button:hover {
-      opacity: 0.7;
-      background-color: rgba(0, 0, 0, 0.5);
-    }
-    
-    /* Date range text styles */
     .date-range-text {
-      font-size: 14px;
+      font-size: 18px;
       color: rgba(255, 255, 255, 0.7);
       text-align: center;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
       text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    }
+    
+    .radio-container {
+      --main-color: #ffb0c4;
+      --main-color-opacity: #ffb0c41c;
+      --total-radio: 4;
+
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding-left: 0.5rem;
+      z-index: 1000;
+      background-color: rgba(20, 20, 20, 0.8);
+      border-radius: 5px;
+      padding: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    }
+    
+    .radio-container input {
+      cursor: pointer;
+      appearance: none;
+    }
+    
+    .radio-container .glider-container {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      background: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0) 0%,
+        rgba(27, 27, 27, 1) 50%,
+        rgba(0, 0, 0, 0) 100%
+      );
+      width: 1px;
+    }
+    
+    .radio-container .glider-container .glider {
+      position: relative;
+      height: calc(100% / var(--total-radio));
+      width: 100%;
+      background: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0) 0%,
+        var(--main-color) 50%,
+        rgba(0, 0, 0, 0) 100%
+      );
+      transition: transform 0.5s cubic-bezier(0.37, 1.95, 0.66, 0.56);
+    }
+    
+    .radio-container .glider-container .glider::before {
+      content: "";
+      position: absolute;
+      height: 60%;
+      width: 300%;
+      top: 50%;
+      transform: translateY(-50%);
+      background: var(--main-color);
+      filter: blur(10px);
+    }
+    
+    .radio-container .glider-container .glider::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      height: 100%;
+      width: 150px;
+      background: linear-gradient(
+        90deg,
+        var(--main-color-opacity) 0%,
+        rgba(0, 0, 0, 0) 100%
+      );
+    }
+    
+    .radio-container label {
+      cursor: pointer;
+      padding: 1rem;
+      position: relative;
+      color: grey;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .radio-container input:checked + label {
+      color: var(--main-color);
+    }
+
+    .radio-container input:nth-of-type(1):checked ~ .glider-container .glider {
+      transform: translateY(0);
+    }
+
+    .radio-container input:nth-of-type(2):checked ~ .glider-container .glider {
+      transform: translateY(100%);
+    }
+
+    .radio-container input:nth-of-type(3):checked ~ .glider-container .glider {
+      transform: translateY(200%);
+    }
+    
+    .radio-container input:nth-of-type(4):checked ~ .glider-container .glider {
+      transform: translateY(300%);
+    }
+    
+    .modal-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .modal-header h2 {
+      font-size: 32px;
+      color: #ffb0c4;
+      margin-bottom: 10px;
+    }
+    
+    .modal-header p {
+      font-size: 18px;
+      color: #aaa;
     }
   </style>
 </head>
 <body>
-  <!-- Background layers -->
-  <div class="background-layer" id="bg1"></div>
-  <div class="background-layer" id="bg2"></div>
-
   <div class="content-wrapper">
-    <div class="background-container">
+    <div class="background-container" id="background">
       <div class="overlay"></div>
       <div class="content">
-        <div class="date-range-text" id="dateRangeText" style="display: none;">From May 2nd 2025, To November 4th</div>
+        <div class="date-range-text" id="dateRangeText" style="display: none;">From May 2nd 2025, To November 25th</div>
         <div class="percentage" id="percentage">0.00%</div>
         <div class="days-text" id="daysLeft">Loading Days Left...</div>
         <div class="days-since-container">
@@ -426,44 +432,57 @@
     </div>
   </div>
 
-  <button class="right-arrow-button" onclick="toggleCalculationMode()">></button>
-
   <a href="https://discord.com/invite/gta-vi" class="gtavidc-link" target="_blank">GTA 6 UNOFFICIAL DISCORD SERVER</a>
 
-  <div class="toolbar">
-    <button onclick="showInfo()">INFO</button>
-    <button onclick="showAchievements()" class="achievements-button"><img src="trophy.png" alt="achievements"></button>
-    <button onclick="showSettings()" class="settings-button"><img src="gear.png" alt="settings"></button>
-    <button onclick="saveAsPNG()">SAVE AS PNG</button>
-  </div>
+  <div class="radio-container">
+    <input checked="" id="radio-countdown" name="radio" type="radio" />
+    <label for="radio-countdown">Countdown</label>
+    <input id="radio-trailer3" name="radio" type="radio" />
+    <label for="radio-trailer3">Trailer 3</label>
+    <input id="radio-progress" name="radio" type="radio" />
+    <label for="radio-progress">Progress</label>
+    <input id="radio-settings" name="radio" type="radio" />
+    <label for="radio-settings">Settings</label>
 
-  <div class="info-modal" id="infoModal">
-    <div class="close-modal" onclick="hideInfo()">✖</div>
-    <h2>GTA VI COUNTDOWN - TANI</h2>
-    <p>- this website shows current progress to GTA VI in percentages<br>
-      - Counting from may 2nd when we got the date <br>
-      - it's very simple I know, but it just works</p>
+    <div class="glider-container">
+      <div class="glider"></div>
+    </div>
   </div>
 
   <div id="settingsModal">
     <div class="close-modal" onclick="hideSettings()">✖</div>
-    <h2>Settings</h2>
-    <div class="setting-option">
-      <label for="toggleArrows">Hide Cycle Arrows:</label>
-      <input type="checkbox" id="toggleArrows">
+    <div class="settings-content">
+      <div class="modal-header">
+        <h2>SETTINGS</h2>
+        <p>Customize your GTA VI Countdown experience</p>
+      </div>
+      
+      <div class="setting-option">
+        <label for="toggleArrows">Hide Cycle Arrows</label>
+        <input type="checkbox" id="toggleArrows">
+      </div>
+      
+      <div class="setting-option">
+        <label for="fontSize">Large Font Size</label>
+        <input type="checkbox" id="fontSize" checked>
+      </div>
     </div>
   </div>
   
   <div id="achievementsModal">
     <div class="close-modal" onclick="hideAchievements()">✖</div>
-    <h2>PROGRESS</h2>
-    <div id="achievementsList">
+    <div class="achievements-content">
+      <div class="modal-header">
+        <h2>PROGRESS ACHIEVEMENTS</h2>
+        <p>Track your progress towards GTA VI release</p>
+      </div>
+      <div id="achievementsList">
 
+      </div>
     </div>
   </div>
 
   <script>
-    
     // May 2nd 2025, 4:00 PM GMT+3 = 13:00 UTC
     const startDate = new Date('2025-05-02T13:00:00Z');
     
@@ -510,7 +529,7 @@ const achievements = [
         percentage = Math.max(0, Math.min(100, percentage));
         
         daysLeft = Math.ceil((altEndDate - now) / (1000 * 60 * 60 * 24));
-        document.getElementById('daysLeft').textContent = `${daysLeft} Days Left Until November 4th 2025          ( trailer 3 window )`;
+        document.getElementById('daysLeft').textContent = `${daysLeft} Days Left Until November 25th 2025          ( trailer 3 window )`;
         
         document.querySelector('.days-since-container').style.display = 'none';
         document.getElementById('dateRangeText').style.display = 'block';
@@ -611,43 +630,23 @@ const achievements = [
     function toggleCalculationMode() {
       isAlternativeMode = !isAlternativeMode;
       
-      const bg1 = document.getElementById('bg1');
-      const bg2 = document.getElementById('bg2');
+      const countdownRadio = document.getElementById('radio-countdown');
+      const trailer3Radio = document.getElementById('radio-trailer3');
       
       if (isAlternativeMode) {
-        // Fade to bg2
-        bg2.style.pointerEvents = 'auto';
-        bg1.style.opacity = '0';
-        setTimeout(() => {
-          bg2.style.opacity = '1';
-        }, 50);
+        countdownRadio.checked = false;
+        trailer3Radio.checked = true;
       } else {
-        // Fade to bg1
-        bg2.style.pointerEvents = 'none';
-        bg2.style.opacity = '0';
-        setTimeout(() => {
-          bg1.style.opacity = '1';
-        }, 50);
+        countdownRadio.checked = true;
+        trailer3Radio.checked = false;
       }
       
-      const achievementsButton = document.querySelector('.achievements-button');
-      if (achievementsButton) {
-        achievementsButton.style.display = isAlternativeMode ? 'none' : 'inline-block';
-      }
-      
-      // Update instant.
       clearInterval(secondsUpdateInterval);
       clearInterval(window.mainCountdownInterval);
       updateCountdownInfo();
       setupMainUpdateInterval();
     }
 
-    function showInfo() {
-      document.getElementById('infoModal').style.display = 'block';
-    }
-    function hideInfo() {
-      document.getElementById('infoModal').style.display = 'none';
-    }
     function showSettings() {
       document.getElementById('settingsModal').style.display = 'block';
     }
@@ -655,9 +654,7 @@ const achievements = [
       document.getElementById('settingsModal').style.display = 'none';
     }
     function showAchievements() {
-      if (!isAlternativeMode) {
-        document.getElementById('achievementsModal').style.display = 'block';
-      }
+      document.getElementById('achievementsModal').style.display = 'block';
     }
     function hideAchievements() {
       document.getElementById('achievementsModal').style.display = 'none';
@@ -676,50 +673,104 @@ const achievements = [
       }
     }
 
-    function saveAsPNG() {
-        const elementToCapture = document.getElementById('background');
-        const overlayElement = elementToCapture.querySelector('.overlay');
-
-        const originalOverlayBg = overlayElement.style.backgroundColor;
-
-        // Temp black background after saving image
-        overlayElement.style.backgroundColor = 'rgba(0, 0, 0, 1)';
-
-        html2canvas(elementToCapture, {
-            backgroundColor: null,
-            useCORS: true
-        }).then(canvas => {
-            overlayElement.style.backgroundColor = originalOverlayBg; 
-
-            const link = document.createElement('a');
-            link.download = 'gta6_countdown.png';
-            link.href = canvas.toDataURL('image/png');
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }).catch(err => {
-            console.error("Error saving image:", err);
-            alert("Error");
-            overlayElement.style.backgroundColor = originalOverlayBg; 
-        });
+    function updateFontSize() {
+      const fontSizeCheckbox = document.getElementById('fontSize');
+      const percentage = document.getElementById('percentage');
+      const daysTexts = document.querySelectorAll('.days-text');
+      const cycleArrows = document.querySelectorAll('.cycle-arrow');
+      const dateRangeText = document.getElementById('dateRangeText');
+      
+      if (fontSizeCheckbox) {
+        const largeFont = fontSizeCheckbox.checked;
+        
+        if (largeFont) {
+          percentage.style.fontSize = '80px';
+          daysTexts.forEach(text => {
+            text.style.fontSize = '28px';
+          });
+          cycleArrows.forEach(arrow => {
+            arrow.style.fontSize = '24px';
+          });
+          dateRangeText.style.fontSize = '18px';
+        } else {
+          percentage.style.fontSize = '50px';
+          daysTexts.forEach(text => {
+            text.style.fontSize = '20px';
+          });
+          cycleArrows.forEach(arrow => {
+            arrow.style.fontSize = '16px';
+          });
+          dateRangeText.style.fontSize = '14px';
+        }
+        
+        localStorage.setItem('largeFont', largeFont);
+      }
     }
     
     document.addEventListener('DOMContentLoaded', () => {
       updateCountdownInfo();
       setupMainUpdateInterval();
 
+      const countdownRadio = document.getElementById('radio-countdown');
+      const trailer3Radio = document.getElementById('radio-trailer3');
+      const progressRadio = document.getElementById('radio-progress');
+      const settingsRadio = document.getElementById('radio-settings');
+      
+      countdownRadio.addEventListener('change', function() {
+        if (this.checked && isAlternativeMode) {
+          toggleCalculationMode();
+        }
+      });
+      
+      trailer3Radio.addEventListener('change', function() {
+        if (this.checked && !isAlternativeMode) {
+          toggleCalculationMode();
+        }
+      });
+      
+      progressRadio.addEventListener('change', function() {
+        if (this.checked) {
+          showAchievements();
+          setTimeout(() => {
+            if (isAlternativeMode) {
+              trailer3Radio.checked = true;
+            } else {
+              countdownRadio.checked = true;
+            }
+          }, 100);
+        }
+      });
+      
+      settingsRadio.addEventListener('change', function() {
+        if (this.checked) {
+          showSettings();
+          setTimeout(() => {
+            if (isAlternativeMode) {
+              trailer3Radio.checked = true;
+            } else {
+              countdownRadio.checked = true;
+            }
+          }, 100);
+        }
+      });
+
       const toggleArrowsCheckbox = document.getElementById('toggleArrows');
+      const fontSizeCheckbox = document.getElementById('fontSize');
+      
       if (toggleArrowsCheckbox) {
         toggleArrowsCheckbox.addEventListener('change', updateArrowVisibility);
-
         const hideArrowsPreference = localStorage.getItem('hideArrows') === 'true';
         toggleArrowsCheckbox.checked = hideArrowsPreference; 
         updateArrowVisibility(); 
+      }
+      
+      if (fontSizeCheckbox) {
+        fontSizeCheckbox.addEventListener('change', updateFontSize);
+        const largeFontPreference = localStorage.getItem('largeFont') !== 'false';
+        fontSizeCheckbox.checked = largeFontPreference; 
+        updateFontSize(); 
       }
     });
   </script>
 </body>
 </html>
-
-
-
