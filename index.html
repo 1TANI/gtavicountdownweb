@@ -420,7 +420,7 @@
     <div class="background-container" id="background">
       <div class="overlay"></div>
       <div class="content">
-        <div class="date-range-text" id="dateRangeText" style="display: none;">From May 2nd 2025, To November 25th</div>
+        <div class="date-range-text" id="dateRangeText" style="display: none;">From May 2nd 2025, To November 4th</div>
         <div class="percentage" id="percentage">0.00%</div>
         <div class="days-text" id="daysLeft">Loading Days Left...</div>
         <div class="days-since-container">
@@ -529,7 +529,7 @@ const achievements = [
         percentage = Math.max(0, Math.min(100, percentage));
         
         daysLeft = Math.ceil((altEndDate - now) / (1000 * 60 * 60 * 24));
-        document.getElementById('daysLeft').textContent = `${daysLeft} Days Left Until November 25th 2025          ( trailer 3 window )`;
+        document.getElementById('daysLeft').textContent = `${daysLeft} Days Left Until November 4th 2025          ( trailer 3 window )`;
         
         document.querySelector('.days-since-container').style.display = 'none';
         document.getElementById('dateRangeText').style.display = 'block';
@@ -774,3 +774,4 @@ const achievements = [
   </script>
 </body>
 </html>
+
