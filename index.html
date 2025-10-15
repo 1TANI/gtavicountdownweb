@@ -3,22 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>GTA VI COUNTDOWN - TANI</title>
-   
-  <meta property="og:title" content="GTA VI Countdown" />
-  <meta property="og:description" content="Tracking progress towards GTA VI release" />
-  <meta property="og:url" content="https://1tani.github.io/gtavicountdownweb/" />
-  <meta property="og:image" content="https://gta6-embed.vercel.app/api/image" />
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="GTA VI Countdown" />
-  <meta property="og:image:width" content="400" />
-  <meta property="og:image:height" content="400" />
-  
-  
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="GTA VI Countdown" />
-  <meta name="twitter:description" content="Tracking progress towards GTA VI release" />
-  <meta name="twitter:image" content="https://gta6-embed.vercel.app/api/image" />
-  <meta name="twitter:image:alt" content="GTA VI Progress" />
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
   <style>
@@ -489,12 +473,12 @@
     }
 
     .radio-container label:hover {
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0);
     }
 
     .radio-container input:checked + label {
       color: var(--main-color);
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0);
     }
 
     .radio-container input:nth-of-type(1):checked ~ .glider-container .glider {
@@ -799,6 +783,7 @@
  <div class="retro-background" id="retroBg1" style="background-image: url('background/bg1.png')"></div>
 <div class="retro-background" id="retroBg2" style="background-image: url('background/bg2.png')"></div>
 <div class="retro-background" id="retroBg3" style="background-image: url('background/bg3.png')"></div>
+<div class="retro-background" id="retroBg4" style="background-image: url('background/bg4.png')"></div>
 
   <div class="content-wrapper">
     <div class="background-container" id="background">
@@ -903,7 +888,7 @@
     let isRetroMode = false;
     let retroBackgroundInterval;
     let currentBgIndex = 0;
-    const totalBackgrounds = 3;
+    const totalBackgrounds = 4;
     let isBackgroundPaused = false;
 
     const achievements = [
@@ -1138,7 +1123,7 @@
         retroBackgroundInterval = setInterval(() => {
           currentBgIndex = (currentBgIndex + 1) % totalBackgrounds;
           updateBackground();
-        }, 1500);
+        }, 4500);
       }
     }
 
@@ -1275,14 +1260,4 @@
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
 
