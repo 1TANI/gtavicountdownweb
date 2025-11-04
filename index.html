@@ -886,7 +886,7 @@
     
     const startDate = new Date('2025-05-02T13:00:00Z');
     const altStartDate = new Date('2025-05-02T13:00:00Z');
-    const altEndDate = new Date('2025-11-04T13:00:00Z');
+    const altEndDate = new Date('2025-11-06T13:00:00Z');
     const trailer2release = new Date('2025-05-06T13:30:00Z');
 
     const daysSinceModes = ['days', 'hours', 'minutes', 'seconds'];
@@ -906,7 +906,7 @@
       { id: 3, title: "30%", description: "Reach 30% completion", targetPercentage: 30, targetDate: new Date('2025-08-26T19:36:00Z') },
       { id: 4, title: "38.1%", description: "Reach 38.1% completion", targetPercentage: 38.1, targetDate: new Date('2025-09-27T05:03:43Z') },
       { id: 5, title: "40%", description: "Reach 40% completion", targetPercentage: 40, targetDate: new Date('2025-10-04T13:48:00Z') },
-      { id: 6, title: "50%", description: "Reach 50% completion", targetPercentage: 50, targetDate: new Date('2025-11-12T08:00:00Z') },
+      { id: 6, title: "HALFWAY", description: "Reach 50% completion", targetPercentage: 50, targetDate: new Date('2025-11-12T08:00:00Z') },
       { id: 7, title: "60%", description: "Reach 60% completion", targetPercentage: 60, targetDate: new Date('2025-12-21T02:12:00Z') },
       { id: 8, title: "69.42%", description: "Nice.", targetPercentage: 69.42, targetDate: new Date('2026-01-26T14:26:54Z') },
       { id: 9, title: "70%", description: "Reach 70% completion", targetPercentage: 70, targetDate: new Date('2026-01-28T20:24:00Z') },
@@ -926,7 +926,7 @@
         percentage = Math.max(0, Math.min(100, percentage));
         
         daysLeft = Math.ceil((altEndDate - now) / (1000 * 60 * 60 * 24));
-        document.getElementById('daysLeft').textContent = `${daysLeft} Days Left Until November 4th 2025          ( trailer 3 window )`;
+        document.getElementById('daysLeft').textContent = `${daysLeft} Days Left Until November 6th 2025          ( trailer 3 speculation )`;
         
         document.querySelector('.days-since-container').style.display = 'none';
         document.getElementById('dateRangeText').style.display = 'block';
@@ -1006,19 +1006,19 @@
       }
 
       clearInterval(secondsUpdateInterval);
-      clearInterval(window.mainCountdownInterval);
+      clearInterval(.mainCountdownInterval);
       setupMainUpdateInterval();
       updateCountdownInfo();
     }
 
     function setupMainUpdateInterval() {
-      clearInterval(window.mainCountdownInterval);
+      clearInterval(.mainCountdownInterval);
       clearInterval(secondsUpdateInterval);
 
       if (!isAlternativeMode && daysSinceModes[currentDaysSinceModeIndex] === 'seconds') {
         secondsUpdateInterval = setInterval(updateCountdownInfo, 1000);
       } else {
-        window.mainCountdownInterval = setInterval(() => {
+        .mainCountdownInterval = setInterval(() => {
           updateCountdownInfo();
         }, 60 * 1000);
       }
@@ -1039,7 +1039,7 @@
       }
       
       clearInterval(secondsUpdateInterval);
-      clearInterval(window.mainCountdownInterval);
+      clearInterval(.mainCountdownInterval);
       updateCountdownInfo();
       setupMainUpdateInterval();
     }
@@ -1269,6 +1269,7 @@
   </script>
 </body>
 </html>
+
 
 
 
