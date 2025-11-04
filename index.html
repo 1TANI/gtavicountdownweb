@@ -1006,19 +1006,19 @@
       }
 
       clearInterval(secondsUpdateInterval);
-      clearInterval(.mainCountdownInterval);
+      clearInterval(window.mainCountdownInterval);
       setupMainUpdateInterval();
       updateCountdownInfo();
     }
 
     function setupMainUpdateInterval() {
-      clearInterval(.mainCountdownInterval);
+      clearInterval(window.mainCountdownInterval);
       clearInterval(secondsUpdateInterval);
 
       if (!isAlternativeMode && daysSinceModes[currentDaysSinceModeIndex] === 'seconds') {
         secondsUpdateInterval = setInterval(updateCountdownInfo, 1000);
       } else {
-        .mainCountdownInterval = setInterval(() => {
+        window.mainCountdownInterval = setInterval(() => {
           updateCountdownInfo();
         }, 60 * 1000);
       }
@@ -1039,7 +1039,7 @@
       }
       
       clearInterval(secondsUpdateInterval);
-      clearInterval(.mainCountdownInterval);
+      clearInterval(window.mainCountdownInterval);
       updateCountdownInfo();
       setupMainUpdateInterval();
     }
@@ -1269,6 +1269,7 @@
   </script>
 </body>
 </html>
+
 
 
 
