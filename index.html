@@ -792,7 +792,7 @@
     <div class="background-container" id="background">
       <div class="overlay"></div>
       <div class="content">
-        <div class="date-range-text" id="dateRangeText" style="display: none;">From May 2nd 2025, To November 6th</div>
+        <div class="date-range-text" id="dateRangeText" style="display: none;">From May 2nd 2025, To November 11th</div>
         <div class="percentage" id="percentage">0.00%</div>
         <div class="days-text" id="daysLeft">Loading Days Left...</div>
         <div class="days-since-container">
@@ -886,7 +886,7 @@
     
     const startDate = new Date('2025-05-02T13:00:00Z');
     const altStartDate = new Date('2025-05-02T13:00:00Z');
-    const altEndDate = new Date('2025-11-06T13:00:00Z');
+    const altEndDate = new Date('2025-11-11T13:00:00Z');
     const trailer2release = new Date('2025-05-06T13:30:00Z');
 
     const daysSinceModes = ['days', 'hours', 'minutes', 'seconds'];
@@ -926,7 +926,7 @@
         percentage = Math.max(0, Math.min(100, percentage));
         
         daysLeft = Math.ceil((altEndDate - now) / (1000 * 60 * 60 * 24));
-        document.getElementById('daysLeft').textContent = `${daysLeft} Days Left Until November 6th 2025          ( trailer 3 speculation )`;
+        document.getElementById('daysLeft').textContent = `${daysLeft} Days Left Until November 11th 2025          ( trailer 3 speculation )`;
         
         document.querySelector('.days-since-container').style.display = 'none';
         document.getElementById('dateRangeText').style.display = 'block';
@@ -1269,6 +1269,7 @@
   </script>
 </body>
 </html>
+
 
 
 
