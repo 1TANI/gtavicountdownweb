@@ -793,6 +793,7 @@
       <div class="overlay"></div>
       <div class="content">
         <div class="date-range-text" id="dateRangeText" style="display: none;">From May 2nd 2025, To November 11th</div>
+        <div class="date-range-text" id="countdownDateRangeText" style="display: none;">From November 7th, 2025 To November 19th, 2026</div>
         <div class="percentage" id="percentage">0.00%</div>
         <div class="days-text" id="daysLeft">Loading Days Left...</div>
         <div class="days-since-container">
@@ -877,17 +878,12 @@
   </div>
 
   <script>
-    const timezoneOffset = new Date().getTimezoneOffset();
-    
-    // Calculate release date in local time (12 AM)
-    const releaseDate = new Date('2026-11-19T00:00:00');
-    // Adjust for timezone offset to make it 12 AM local time
-    const release = new Date(releaseDate.getTime() - (timezoneOffset * 60 * 1000));
-    
-    const startDate = new Date('2025-11-07T13:00:00Z');
-    const altStartDate = new Date('2025-11-07T13:00:00Z');
-    const altEndDate = new Date('2025-11-11T13:00:00Z');
-    const trailer2release = new Date('2025-05-06T13:30:00Z');
+    // Use UTC dates to avoid timezone issues
+    const releaseDate = new Date(Date.UTC(2026, 10, 19)); // November 19, 2026 UTC
+    const startDate = new Date(Date.UTC(2025, 10, 7)); // November 7, 2025 UTC
+    const altStartDate = new Date(Date.UTC(2025, 4, 2)); // May 2, 2025 UTC
+    const altEndDate = new Date(Date.UTC(2025, 10, 11)); // November 11, 2025 UTC
+    const trailer2release = new Date(Date.UTC(2025, 4, 6, 13, 30)); // May 6, 2025 13:30 UTC
 
     const daysSinceModes = ['days', 'hours', 'minutes', 'seconds'];
     let currentDaysSinceModeIndex = 0;
@@ -930,17 +926,19 @@
         
         document.querySelector('.days-since-container').style.display = 'none';
         document.getElementById('dateRangeText').style.display = 'block';
+        document.getElementById('countdownDateRangeText').style.display = 'none';
       } else {
-        const total = release - startDate;
+        const total = releaseDate - startDate;
         const elapsed = now - startDate;
         percentage = (elapsed / total) * 100;
         percentage = Math.max(0, Math.min(100, percentage));
         
-        daysLeft = Math.ceil((release - now) / (1000 * 60 * 60 * 24));
+        daysLeft = Math.ceil((releaseDate - now) / (1000 * 60 * 60 * 24));
         document.getElementById('daysLeft').textContent = `${daysLeft} Days Left Until Grand Theft Auto VI`;
         
         document.querySelector('.days-since-container').style.display = 'flex';
         document.getElementById('dateRangeText').style.display = 'none';
+        document.getElementById('countdownDateRangeText').style.display = 'block';
         
         const msSince = now - trailer2release;
         const daysSince = Math.floor(msSince / (1000 * 60 * 60 * 24));
@@ -1015,13 +1013,10 @@
       clearInterval(window.mainCountdownInterval);
       clearInterval(secondsUpdateInterval);
 
-      if (!isAlternativeMode && daysSinceModes[currentDaysSinceModeIndex] === 'seconds') {
-        secondsUpdateInterval = setInterval(updateCountdownInfo, 1000);
-      } else {
-        window.mainCountdownInterval = setInterval(() => {
-          updateCountdownInfo();
-        }, 60 * 1000);
-      }
+      // Update every 10 seconds for both modes
+      window.mainCountdownInterval = setInterval(() => {
+        updateCountdownInfo();
+      }, 10000); // 10 seconds
     }
 
     function toggleCalculationMode() {
@@ -1076,6 +1071,7 @@
       const daysTexts = document.querySelectorAll('.days-text');
       const cycleArrows = document.querySelectorAll('.cycle-arrow');
       const dateRangeText = document.getElementById('dateRangeText');
+      const countdownDateRangeText = document.getElementById('countdownDateRangeText');
       
       if (fontSizeCheckbox) {
         const largeFont = fontSizeCheckbox.checked;
@@ -1089,6 +1085,7 @@
             arrow.style.fontSize = '24px';
           });
           dateRangeText.style.fontSize = '18px';
+          countdownDateRangeText.style.fontSize = '18px';
         } else {
           percentage.style.fontSize = '50px';
           daysTexts.forEach(text => {
@@ -1098,6 +1095,7 @@
             arrow.style.fontSize = '16px';
           });
           dateRangeText.style.fontSize = '14px';
+          countdownDateRangeText.style.fontSize = '14px';
         }
         
         localStorage.setItem('largeFont', largeFont);
@@ -1269,13 +1267,3 @@
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
