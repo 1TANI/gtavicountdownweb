@@ -792,7 +792,7 @@
     <div class="background-container" id="background">
       <div class="overlay"></div>
       <div class="content">
-        <div class="date-range-text" id="dateRangeText" style="display: none;">From May 2nd 2025, To November 11th</div>
+        <div class="date-range-text" id="dateRangeText" style="display: none;">From November 7th 2025, To December 2nd</div>
         <div class="date-range-text" id="countdownDateRangeText" style="display: none;">From November 7th, 2025 To November 19th, 2026</div>
         <div class="percentage" id="percentage">0.00%</div>
         <div class="days-text" id="daysLeft">Loading Days Left...</div>
@@ -881,8 +881,8 @@
     // Use UTC dates to avoid timezone issues
     const releaseDate = new Date(Date.UTC(2026, 10, 19)); // November 19, 2026 UTC
     const startDate = new Date(Date.UTC(2025, 10, 7)); // November 7, 2025 UTC
-    const altStartDate = new Date(Date.UTC(2025, 4, 2)); // May 2, 2025 UTC
-    const altEndDate = new Date(Date.UTC(2025, 10, 11)); // November 11, 2025 UTC
+    const altStartDate = new Date(Date.UTC(2025, 10, 6)); // nov 7, 2025 UTC
+    const altEndDate = new Date(Date.UTC(2025, 11, 2)); // dec 2, 2025 UTC
     const trailer2release = new Date(Date.UTC(2025, 4, 6, 13, 30)); // May 6, 2025 13:30 UTC
 
     const daysSinceModes = ['days', 'hours', 'minutes', 'seconds'];
@@ -896,19 +896,19 @@
     const totalBackgrounds = 4;
     let isBackgroundPaused = false;
 
-    const achievements = [
-      { id: 1, title: "10%", description: "Reach 10% completion", targetPercentage: 10, targetDate: new Date('2025-06-10T07:12:00Z') },
-      { id: 2, title: "20%", description: "Reach 20% completion", targetPercentage: 20, targetDate: new Date('2025-07-19T01:24:00Z') },
-      { id: 3, title: "30%", description: "Reach 30% completion", targetPercentage: 30, targetDate: new Date('2025-08-26T19:36:00Z') },
-      { id: 4, title: "38.1%", description: "Reach 38.1% completion", targetPercentage: 38.1, targetDate: new Date('2025-09-27T05:03:43Z') },
-      { id: 5, title: "40%", description: "Reach 40% completion", targetPercentage: 40, targetDate: new Date('2025-10-04T13:48:00Z') },
-      { id: 6, title: "HALFWAY", description: "Reach 50% completion", targetPercentage: 50, targetDate: new Date('2025-11-12T08:00:00Z') },
-      { id: 7, title: "60%", description: "Reach 60% completion", targetPercentage: 60, targetDate: new Date('2025-12-21T02:12:00Z') },
-      { id: 8, title: "69.42%", description: "Nice.", targetPercentage: 69.42, targetDate: new Date('2026-01-26T14:26:54Z') },
-      { id: 9, title: "70%", description: "Reach 70% completion", targetPercentage: 70, targetDate: new Date('2026-01-28T20:24:00Z') },
-      { id: 10, title: "90%", description: "Reach 90% completion", targetPercentage: 90, targetDate: new Date('2026-04-16T08:48:00Z') },
-      { id: 11, title: "ULTIMATE LUCIA GTA 6", description: "Reach 100% completion", targetPercentage: 100, targetDate: new Date('2026-05-25T03:00:00Z') }
-    ];
+const achievements = [
+  { id: 1, title: "10%", description: "Reach 10% completion", targetPercentage: 10, targetDate: new Date('2025-12-17T12:00:00Z') },
+  { id: 2, title: "20%", description: "Reach 20% completion", targetPercentage: 20, targetDate: new Date('2026-01-26T00:00:00Z') },
+  { id: 3, title: "30%", description: "Reach 30% completion", targetPercentage: 30, targetDate: new Date('2026-03-06T12:00:00Z') },
+  { id: 4, title: "38.1%", description: "Reach 38.1% completion", targetPercentage: 38.1, targetDate: new Date('2026-04-05T05:22:48Z') },
+  { id: 5, title: "40%", description: "Reach 40% completion", targetPercentage: 40, targetDate: new Date('2026-04-14T00:00:00Z') },
+  { id: 6, title: "HALFWAY", description: "Reach 50% completion", targetPercentage: 50, targetDate: new Date('2026-05-22T12:00:00Z') },
+  { id: 7, title: "60%", description: "Reach 60% completion", targetPercentage: 60, targetDate: new Date('2026-07-30T00:00:00Z') },
+  { id: 8, title: "69.42%", description: "Nice.", targetPercentage: 69.42, targetDate: new Date('2026-09-05T14:26:54Z') },
+  { id: 9, title: "70%", description: "Reach 70% completion", targetPercentage: 70, targetDate: new Date('2026-09-07T12:00:00Z') },
+  { id: 10, title: "90%", description: "Reach 90% completion", targetPercentage: 90, targetDate: new Date('2026-11-04T12:00:00Z') },
+  { id: 11, title: "ULTIMATE LUCIA GTA 6", description: "Reach 100% completion", targetPercentage: 100, targetDate: new Date('2026-11-19T00:00:00Z') }
+];
 
     function updateCountdownInfo() {
       const now = new Date();
@@ -922,7 +922,7 @@
         percentage = Math.max(0, Math.min(100, percentage));
         
         daysLeft = Math.ceil((altEndDate - now) / (1000 * 60 * 60 * 24));
-        document.getElementById('daysLeft').textContent = `${daysLeft} Days Left Until November 11th 2025          ( trailer 3 speculation )`;
+        document.getElementById('daysLeft').textContent = `${daysLeft} Days Left Until December 2nd 2025          ( trailer 3 speculation )`;
         
         document.querySelector('.days-since-container').style.display = 'none';
         document.getElementById('dateRangeText').style.display = 'block';
@@ -1243,7 +1243,7 @@
       
       if (retroModeToggle) {
         retroModeToggle.addEventListener('change', toggleRetroMode);
-        const retroModePreference = localStorage.getItem('retroMode') === 'true';
+        const retroModePreference = localStorage.getItem('retroMode') !== 'false'; 
         retroModeToggle.checked = retroModePreference;
         toggleRetroMode();
       }
