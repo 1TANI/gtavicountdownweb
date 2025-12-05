@@ -792,7 +792,7 @@
     <div class="background-container" id="background">
       <div class="overlay"></div>
       <div class="content">
-        <div class="date-range-text" id="dateRangeText" style="display: none;">From November 7th 2025, To December 2nd</div>
+        <div class="date-range-text" id="dateRangeText" style="display: none;">From November 7th 2025, To December 9th</div>
         <div class="date-range-text" id="countdownDateRangeText" style="display: none;">From November 7th, 2025 To November 19th, 2026</div>
         <div class="percentage" id="percentage">0.00%</div>
         <div class="days-text" id="daysLeft">Loading Days Left...</div>
@@ -882,7 +882,7 @@
     const releaseDate = new Date(Date.UTC(2026, 10, 19)); // November 19, 2026 UTC
     const startDate = new Date(Date.UTC(2025, 10, 7)); // November 7, 2025 UTC
     const altStartDate = new Date(Date.UTC(2025, 10, 6)); // nov 7, 2025 UTC
-    const altEndDate = new Date(Date.UTC(2025, 11, 2)); // dec 2, 2025 UTC
+    const altEndDate = new Date(Date.UTC(2025, 11, 9)); // dec 9, 2025 UTC
     const trailer2release = new Date(Date.UTC(2025, 4, 6, 13, 30)); // May 6, 2025 13:30 UTC
 
     const daysSinceModes = ['days', 'hours', 'minutes', 'seconds'];
@@ -922,7 +922,7 @@ const achievements = [
         percentage = Math.max(0, Math.min(100, percentage));
         
         daysLeft = Math.ceil((altEndDate - now) / (1000 * 60 * 60 * 24));
-        document.getElementById('daysLeft').textContent = `${daysLeft} Days Left Until December 2nd 2025          ( trailer 3 speculation )`;
+        document.getElementById('daysLeft').textContent = `${daysLeft} Days Left Until December 9th 2025          ( trailer 3 speculation )`;
         
         document.querySelector('.days-since-container').style.display = 'none';
         document.getElementById('dateRangeText').style.display = 'block';
@@ -1267,3 +1267,4 @@ const achievements = [
   </script>
 </body>
 </html>
+
