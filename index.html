@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>GTA VI COUNTDOWN - TANI</title>
-  
+
   <meta name="robots" content="noimageindex, noembed" />
-  <meta name="twitter:card" content="none" />  
-  
+  <meta name="twitter:card" content="none" />
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
   <style>
     @font-face {
@@ -22,12 +23,147 @@
       box-sizing: border-box;
     }
 
-    html, body {
+    html,
+    body {
       height: 100%;
       font-family: 'GTAArtDecoMedium', sans-serif;
       color: white;
       overflow: hidden;
       background-color: #121212;
+    }
+
+
+    .news-mode-active .background-container {
+      width: 70vw !important;
+      height: 70vh !important;
+      max-width: 1400px;
+      max-height: 900px;
+      pointer-events: auto;
+
+    }
+
+    .news-container,
+    .progress-container,
+    .settings-container {
+      display: none;
+      width: 100%;
+      height: 100%;
+      overflow-y: scroll;
+
+      padding: 20px;
+      box-sizing: border-box;
+
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05);
+      pointer-events: auto;
+
+      position: relative;
+      z-index: 20;
+    }
+
+    .news-grid,
+    .progress-grid,
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      width: 100%;
+      padding-bottom: 20px;
+    }
+
+    .news-card,
+    .progress-card {
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 4px;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .news-card:hover,
+    .progress-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .news-image-container {
+      width: 100%;
+      height: 200px;
+      overflow: hidden;
+      position: relative;
+      background-color: #000;
+    }
+
+    .news-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .news-card:hover .news-image {
+      transform: scale(1.05);
+    }
+
+    .news-content {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      text-align: left;
+    }
+
+    .news-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .news-author {
+      font-family: sans-serif;
+      font-weight: bold;
+      font-size: 14px;
+      color: #fff;
+    }
+
+    .news-date {
+      font-family: sans-serif;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .news-title {
+      font-family: sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+
+
+    .news-container::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .news-container::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+    }
+
+    .news-container::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+    }
+
+    .news-container::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.3);
     }
 
     .content-wrapper {
@@ -49,8 +185,8 @@
       -webkit-backdrop-filter: blur(20px) saturate(180%);
       position: relative;
       border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 
+      overflow: visible;
+      box-shadow:
         0 8px 32px rgba(0, 0, 0, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.2),
         inset 0 -1px 0 rgba(0, 0, 0, 0.1);
@@ -70,7 +206,7 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: 
+      background:
         radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
         radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
         radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
@@ -85,7 +221,7 @@
     }
 
     .overlay {
-      background-color: rgba(0, 0, 0, 0.4); 
+      background-color: rgba(0, 0, 0, 0.4);
       height: 100%;
       width: 100%;
       position: absolute;
@@ -111,6 +247,7 @@
       0% {
         transform: scale(1);
       }
+
       100% {
         transform: scale(1.04);
       }
@@ -122,7 +259,7 @@
       margin: 8px 0;
     }
 
-    .days-text + .days-text {
+    .days-text+.days-text {
       margin-top: 12px;
     }
 
@@ -161,8 +298,9 @@
       opacity: 1;
     }
 
-    #settingsModal, #achievementsModal {
-      display: none; 
+    #settingsModal,
+    #achievementsModal {
+      display: none;
       position: fixed;
       top: 0;
       left: 0;
@@ -174,7 +312,8 @@
       background: rgba(0, 0, 0, 0.4);
     }
 
-    .settings-content, .achievements-content {
+    .settings-content,
+    .achievements-content {
       max-width: 600px;
       margin: 0 auto;
       background: rgba(255, 255, 255, 0.08);
@@ -183,7 +322,7 @@
       border-radius: 20px;
       padding: 40px;
       border: 1px solid rgba(255, 255, 255, 0.18);
-      box-shadow: 
+      box-shadow:
         0 8px 32px rgba(0, 0, 0, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.2),
         inset 0 -1px 0 rgba(0, 0, 0, 0.1);
@@ -191,14 +330,15 @@
       overflow: hidden;
     }
 
-    .settings-content::before, .achievements-content::before {
+    .settings-content::before,
+    .achievements-content::before {
       content: '';
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background: 
+      background:
         radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
         radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
         radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
@@ -226,12 +366,13 @@
       border: 1px solid rgba(255, 255, 255, 0.2);
       transition: all 0.3s ease;
     }
+
     .close-modal:hover {
       color: #e74c3c;
       background: rgba(255, 255, 255, 0.2);
       transform: scale(1.1);
     }
-    
+
     .setting-option {
       margin-bottom: 20px;
       display: flex;
@@ -244,27 +385,27 @@
       border: 1px solid rgba(255, 255, 255, 0.1);
       transition: all 0.3s ease;
     }
-    
+
     .setting-option:hover {
       background-color: rgba(255, 255, 255, 0.1);
       border-color: rgba(255, 255, 255, 0.2);
     }
-    
+
     .setting-option label {
       font-size: 18px;
       color: #fff;
-      cursor: pointer; 
+      cursor: pointer;
     }
-    
+
     .setting-option input[type="checkbox"] {
       -webkit-appearance: none;
       -moz-appearance: none;
       appearance: none;
-      width: 28px; 
+      width: 28px;
       height: 28px;
       border: 2px solid #971281;
       border-radius: 6px;
-      background-color: rgba(255, 255, 255, 0.1); 
+      background-color: rgba(255, 255, 255, 0.1);
       cursor: pointer;
       position: relative;
       transition: all 0.3s ease;
@@ -272,7 +413,7 @@
     }
 
     .setting-option input[type="checkbox"]:checked {
-      background-color: #8a34db; 
+      background-color: #8a34db;
       border-color: #8a34db;
     }
 
@@ -282,7 +423,7 @@
       color: white;
       font-size: 20px;
       text-align: center;
-      line-height: 24px; 
+      line-height: 24px;
     }
 
     .achievement-item {
@@ -296,7 +437,7 @@
       border: 1px solid rgba(255, 255, 255, 0.1);
       transition: all 0.3s ease;
     }
-    
+
     .achievement-item:hover {
       background-color: rgba(255, 255, 255, 0.1);
       border-color: rgba(255, 255, 255, 0.2);
@@ -363,10 +504,127 @@
       text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     }
 
+    .date-range-container {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      position: relative;
+      margin-bottom: 15px;
+    }
+
+    .speculation-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(10px) saturate(180%);
+      -webkit-backdrop-filter: blur(10px) saturate(180%);
+      border: 1.5px solid rgba(0, 0, 0, 0.5);
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      flex-shrink: 0;
+      box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.15),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3);
+      position: relative;
+      top: -8px;
+      left: 2px;
+    }
+
+    .speculation-dot:hover {
+      transform: scale(1.2);
+      background: rgba(255, 255, 255, 0.4);
+      box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.4),
+        0 0 15px rgba(255, 255, 255, 0.3);
+    }
+
+    .speculation-dot.active {
+      background: rgba(255, 176, 196, 0.5);
+      border-color: rgba(0, 0, 0, 0.6);
+      box-shadow:
+        0 4px 12px rgba(255, 176, 196, 0.3),
+        inset 0 1px 2px rgba(255, 255, 255, 0.4);
+    }
+
+    .speculation-menu {
+      position: absolute;
+      bottom: calc(100% + 15px);
+      left: 50%;
+      transform: translateX(-50%) translateY(10px) scale(0.95);
+      background: rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(40px) saturate(180%);
+      -webkit-backdrop-filter: blur(40px) saturate(180%);
+      border-radius: 18px;
+      padding: 8px;
+      min-width: 200px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow:
+        0 15px 50px rgba(0, 0, 0, 0.35),
+        0 0 0 1px rgba(255, 255, 255, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+      z-index: 2000;
+    }
+
+    .speculation-menu.open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0) scale(1);
+    }
+
+    .speculation-menu::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-top: 10px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .speculation-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      margin: 4px 0;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      color: rgba(255, 255, 255, 0.95);
+      font-size: 16px;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    .speculation-item:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .speculation-item.selected {
+      background: rgba(255, 176, 196, 0.25);
+    }
+
+    .speculation-item .date-name {
+      font-weight: 500;
+    }
+
+    .speculation-item .percentage {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 14px;
+      margin-left: 16px;
+    }
+
     .radio-container {
       --main-color: #ffb0c4;
       --main-color-opacity: #ffb0c41c;
-      --total-radio: 4;
+      --total-radio: 5;
 
       display: flex;
       flex-direction: column;
@@ -380,7 +638,7 @@
       -webkit-backdrop-filter: blur(20px) saturate(180%);
       border-radius: 5px;
       padding: 10px;
-      box-shadow: 
+      box-shadow:
         0 8px 32px rgba(0, 0, 0, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.2),
         inset 0 -1px 0 rgba(0, 0, 0, 0.1);
@@ -395,7 +653,7 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: 
+      background:
         radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
         radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
         radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
@@ -419,12 +677,10 @@
       left: 0;
       top: 0;
       bottom: 0;
-      background: linear-gradient(
-        0deg,
-        rgba(0, 0, 0, 0) 0%,
-        rgba(27, 27, 27, 1) 50%,
-        rgba(0, 0, 0, 0) 100%
-      );
+      background: linear-gradient(0deg,
+          rgba(0, 0, 0, 0) 0%,
+          rgba(27, 27, 27, 1) 50%,
+          rgba(0, 0, 0, 0) 100%);
       width: 1px;
     }
 
@@ -432,12 +688,10 @@
       position: relative;
       height: calc(100% / var(--total-radio));
       width: 100%;
-      background: linear-gradient(
-        0deg,
-        rgba(0, 0, 0, 0) 0%,
-        var(--main-color) 50%,
-        rgba(0, 0, 0, 0) 100%
-      );
+      background: linear-gradient(0deg,
+          rgba(0, 0, 0, 0) 0%,
+          var(--main-color) 50%,
+          rgba(0, 0, 0, 0) 100%);
       transition: transform 0.5s cubic-bezier(0.37, 1.95, 0.66, 0.56);
     }
 
@@ -458,11 +712,9 @@
       left: 0;
       height: 100%;
       width: 150px;
-      background: linear-gradient(
-        90deg,
-        var(--main-color-opacity) 0%,
-        rgba(0, 0, 0, 0) 100%
-      );
+      background: linear-gradient(90deg,
+          var(--main-color-opacity) 0%,
+          rgba(0, 0, 0, 0) 100%);
     }
 
     .radio-container label {
@@ -479,25 +731,29 @@
       background: rgba(255, 255, 255, 0);
     }
 
-    .radio-container input:checked + label {
+    .radio-container input:checked+label {
       color: var(--main-color);
       background: rgba(255, 255, 255, 0);
     }
 
-    .radio-container input:nth-of-type(1):checked ~ .glider-container .glider {
+    .radio-container input:nth-of-type(1):checked~.glider-container .glider {
       transform: translateY(0);
     }
 
-    .radio-container input:nth-of-type(2):checked ~ .glider-container .glider {
+    .radio-container input:nth-of-type(2):checked~.glider-container .glider {
       transform: translateY(100%);
     }
 
-    .radio-container input:nth-of-type(3):checked ~ .glider-container .glider {
+    .radio-container input:nth-of-type(3):checked~.glider-container .glider {
       transform: translateY(200%);
     }
 
-    .radio-container input:nth-of-type(4):checked ~ .glider-container .glider {
+    .radio-container input:nth-of-type(4):checked~.glider-container .glider {
       transform: translateY(300%);
+    }
+
+    .radio-container input:nth-of-type(5):checked~.glider-container .glider {
+      transform: translateY(400%);
     }
 
     .modal-header {
@@ -552,7 +808,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: 
+      background:
         radial-gradient(circle at 20% 50%, rgba(255, 50, 50, 0.4) 0%, transparent 60%),
         radial-gradient(circle at 80% 20%, rgba(50, 50, 255, 0.4) 0%, transparent 60%),
         radial-gradient(circle at 40% 80%, rgba(255, 255, 50, 0.4) 0%, transparent 60%);
@@ -568,9 +824,9 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background-image: 
-        linear-gradient(45deg, rgba(255,255,255,0.15) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.15) 75%, rgba(255,255,255,0.15)),
-        linear-gradient(45deg, rgba(255,255,255,0.15) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.15) 75%, rgba(255,255,255,0.15));
+      background-image:
+        linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.15) 75%, rgba(255, 255, 255, 0.15)),
+        linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.15) 75%, rgba(255, 255, 255, 0.15));
       background-size: 3px 3px;
       background-position: 0 0, 3px 3px;
       opacity: 1;
@@ -583,13 +839,11 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: repeating-linear-gradient(
-        0deg,
-        rgba(0, 0, 0, 0.1) 0px,
-        rgba(0, 0, 0, 0.1) 1px,
-        transparent 1px,
-        transparent 2px
-      );
+      background: repeating-linear-gradient(0deg,
+          rgba(0, 0, 0, 0.1) 0px,
+          rgba(0, 0, 0, 0.1) 1px,
+          transparent 1px,
+          transparent 2px);
       z-index: 13;
       pointer-events: none;
     }
@@ -636,7 +890,7 @@
       width: 100%;
       height: 100%;
       border-radius: 10px;
-      box-shadow: 
+      box-shadow:
         inset 0 0 60px rgba(0, 0, 0, 0.7),
         inset 0 0 20px rgba(0, 0, 0, 0.6);
       z-index: 15;
@@ -658,25 +912,48 @@
       0% {
         box-shadow: inset 10px 10px 100px rgba(0, 0, 0, 0.7);
       }
+
       33% {
         box-shadow: inset -5px -5px 110px rgba(0, 0, 0, 0.75);
       }
+
       66% {
         box-shadow: inset 5px -10px 95px rgba(0, 0, 0, 0.65);
       }
+
       100% {
         box-shadow: inset 10px 10px 100px rgba(0, 0, 0, 0.7);
       }
     }
 
     @keyframes flicker {
-      0% { opacity: 0.97; }
-      5% { opacity: 0.95; }
-      10% { opacity: 0.98; }
-      15% { opacity: 0.96; }
-      20% { opacity: 0.99; }
-      50% { opacity: 0.98; }
-      100% { opacity: 0.97; }
+      0% {
+        opacity: 0.97;
+      }
+
+      5% {
+        opacity: 0.95;
+      }
+
+      10% {
+        opacity: 0.98;
+      }
+
+      15% {
+        opacity: 0.96;
+      }
+
+      20% {
+        opacity: 0.99;
+      }
+
+      50% {
+        opacity: 0.98;
+      }
+
+      100% {
+        opacity: 0.97;
+      }
     }
 
     .retro-flicker {
@@ -717,17 +994,17 @@
       -webkit-backdrop-filter: blur(20px) saturate(180%);
       border-radius: 5px;
       padding: 10px;
-      box-shadow: 
+      box-shadow:
         0 8px 32px rgba(0, 0, 0, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.2),
         inset 0 -1px 0 rgba(0, 0, 0, 0.1);
       border: 1px solid rgba(255, 255, 255, 0.18);
     }
-    
+
     .retro-mode-active .pause-button-container {
       display: block;
     }
-    
+
     .play-pause-button {
       --color: #a5a5b0;
       --size: 27px;
@@ -754,11 +1031,11 @@
       animation: keyframes-fill .5s;
     }
 
-    .play-pause-button input:checked ~ .play {
+    .play-pause-button input:checked~.play {
       display: block;
     }
 
-    .play-pause-button input:checked ~ .pause {
+    .play-pause-button input:checked~.pause {
       display: none;
     }
 
@@ -768,6 +1045,59 @@
       cursor: pointer;
       height: 0;
       width: 0;
+    }
+
+
+    .settings-card {
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .settings-card:hover {
+      transform: translateY(-5px);
+      background: rgba(0, 0, 0, 0.6);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .settings-icon {
+      font-size: 24px;
+      width: 50px;
+      height: 50px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+    }
+
+    .settings-details {
+      flex: 1;
+      text-align: left;
+    }
+
+    .settings-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .settings-desc {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .settings-toggle input[type="checkbox"] {
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      accent-color: #ffb0c4;
     }
 
     @keyframes keyframes-fill {
@@ -782,24 +1112,106 @@
     }
   </style>
 </head>
+
 <body>
- <div class="retro-background" id="retroBg1" style="background-image: url('background/bg1.png')"></div>
-<div class="retro-background" id="retroBg2" style="background-image: url('background/bg2.png')"></div>
-<div class="retro-background" id="retroBg3" style="background-image: url('background/bg3.png')"></div>
-<div class="retro-background" id="retroBg4" style="background-image: url('background/bg4.png')"></div>
+  <div class="retro-background" id="retroBg1" style="background-image: url('background/bg1.png')"></div>
+  <div class="retro-background" id="retroBg2" style="background-image: url('background/bg2.png')"></div>
+  <div class="retro-background" id="retroBg3" style="background-image: url('background/bg3.png')"></div>
+  <div class="retro-background" id="retroBg4" style="background-image: url('background/bg4.png')"></div>
 
   <div class="content-wrapper">
     <div class="background-container" id="background">
       <div class="overlay"></div>
       <div class="content">
-        <div class="date-range-text" id="dateRangeText" style="display: none;">From November 7th 2025, To May 5th 2026</div>
-        <div class="date-range-text" id="countdownDateRangeText" style="display: none;">From November 7th, 2025 To November 19th, 2026</div>
+        <div class="date-range-container" id="dateRangeContainer" style="display: none;">
+          <div class="date-range-text" id="dateRangeText">From November 7th 2025, To May 5th 2026</div>
+          <div class="speculation-dot" id="speculationDot" onclick="toggleSpeculationMenu()"></div>
+          <div class="speculation-menu" id="speculationMenu">
+            <div class="speculation-item" data-start="2025-11-07" data-end="2026-02-02"
+              data-label="From November 7th 2025, To February 2nd 2026" onclick="selectSpeculation(this)">
+              <span class="date-name">February 2nd</span>
+              <span class="percentage" id="spec-feb2-pct">0%</span>
+            </div>
+            <div class="speculation-item" data-start="2025-11-07" data-end="2026-05-05"
+              data-label="From November 7th 2025, To May 5th 2026" onclick="selectSpeculation(this)">
+              <span class="date-name">May 5th</span>
+              <span class="percentage" id="spec-may5-pct">0%</span>
+            </div>
+          </div>
+        </div>
+        <div class="date-range-text" id="countdownDateRangeText" style="display: none;">From November 7th, 2025 To
+          November 19th, 2026</div>
         <div class="percentage" id="percentage">0.00%</div>
         <div class="days-text" id="daysLeft">Loading Days Left...</div>
         <div class="days-since-container">
           <span class="cycle-arrow" onclick="toggleDaysSinceMode('previous')">◀</span>
           <div class="days-text" id="daysSince">Loading Days Since...</div>
           <span class="cycle-arrow" onclick="toggleDaysSinceMode('next')">▶</span>
+        </div>
+      </div>
+
+
+      <div class="news-container" id="newsContainer">
+        <div class="news-grid" id="newsGrid">
+
+        </div>
+      </div>
+
+
+      <div class="progress-container" id="progressContainer">
+        <div class="modal-header">
+          <h2>PROGRESS</h2>
+          <p>Track progress towards GTA VI release</p>
+        </div>
+        <div class="progress-grid" id="achievementsGrid">
+
+        </div>
+      </div>
+
+
+      <div class="settings-container" id="settingsContainer">
+        <div class="modal-header">
+          <h2>SETTINGS</h2>
+          <p>Customize your experience</p>
+        </div>
+        <div class="settings-grid">
+
+
+          <div class="settings-card" data-target="toggleArrows">
+            <div class="settings-icon">↔</div>
+            <div class="settings-details">
+              <div class="settings-title">Cycle Arrows</div>
+              <div class="settings-desc">Show/Hide navigation arrows</div>
+            </div>
+            <div class="settings-toggle">
+              <input type="checkbox" id="toggleArrows" class="settings-checkbox-input">
+            </div>
+          </div>
+
+
+          <div class="settings-card" data-target="fontSize">
+            <div class="settings-icon">Aa</div>
+            <div class="settings-details">
+              <div class="settings-title">Larger Font</div>
+              <div class="settings-desc">Increase text size</div>
+            </div>
+            <div class="settings-toggle">
+              <input type="checkbox" id="fontSize" class="settings-checkbox-input">
+            </div>
+          </div>
+
+
+          <div class="settings-card" data-target="retroModeToggle">
+            <div class="settings-icon">📺</div>
+            <div class="settings-details">
+              <div class="settings-title">Backgrounds</div>
+              <div class="settings-desc">Enable backgrounds</div>
+            </div>
+            <div class="settings-toggle">
+              <input type="checkbox" id="retroModeToggle" class="settings-checkbox-input" checked>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
@@ -817,8 +1229,16 @@
   <div class="pause-button-container">
     <label class="play-pause-button">
       <input type="checkbox" id="pauseBackgrounds" />
-      <svg viewBox="0 0 384 512" height="1em" xmlns="http://www.w3.org/2000/svg" class="play"><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"></path></svg>
-      <svg viewBox="0 0 320 512" height="1em" xmlns="http://www.w3.org/2000/svg" class="pause"><path d="M48 64C21.5 64 0 85.5 0 112V400c0 26.5 21.5 48 48 48H80c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H48zm192 0c-26.5 0-48 21.5-48 48V400c0 26.5 21.5 48 48 48h32c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H240z"></path></svg>
+      <svg viewBox="0 0 384 512" height="1em" xmlns="http://www.w3.org/2000/svg" class="play">
+        <path
+          d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z">
+        </path>
+      </svg>
+      <svg viewBox="0 0 320 512" height="1em" xmlns="http://www.w3.org/2000/svg" class="pause">
+        <path
+          d="M48 64C21.5 64 0 85.5 0 112V400c0 26.5 21.5 48 48 48H80c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H48zm192 0c-26.5 0-48 21.5-48 48V400c0 26.5 21.5 48 48 48h32c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H240z">
+        </path>
+      </svg>
     </label>
   </div>
 
@@ -829,6 +1249,8 @@
     <label for="radio-countdown">Countdown</label>
     <input id="radio-trailer3" name="radio" type="radio" />
     <label for="radio-trailer3">Trailer 3</label>
+    <input id="radio-news" name="radio" type="radio" />
+    <label for="radio-news">News</label>
     <input id="radio-progress" name="radio" type="radio" />
     <label for="radio-progress">Progress</label>
     <input id="radio-settings" name="radio" type="radio" />
@@ -839,107 +1261,146 @@
     </div>
   </div>
 
-  <div id="settingsModal">
-    <div class="close-modal" onclick="hideSettings()">✖</div>
-    <div class="settings-content">
-      <div class="modal-header">
-        <h2>SETTINGS</h2>
-        <p>Customize your GTA VI Countdown experience</p>
-      </div>
-      
-      <div class="setting-option">
-        <label for="toggleArrows">Hide Cycle Arrows</label>
-        <input type="checkbox" id="toggleArrows">
-      </div>
-      
-      <div class="setting-option">
-        <label for="fontSize">Large Font Size</label>
-        <input type="checkbox" id="fontSize" checked>
-      </div>
-      
-      <div class="setting-option">
-        <label for="retroModeToggle">Backgrounds</label>
-        <input type="checkbox" id="retroModeToggle">
-      </div>
-    </div>
-  </div>
-  
-  <div id="achievementsModal">
-    <div class="close-modal" onclick="hideAchievements()">✖</div>
-    <div class="achievements-content">
-      <div class="modal-header">
-        <h2>PROGRESS</h2>
-        <p>Track progress towards GTA VI release</p>
-      </div>
-      <div id="achievementsList">
-
-      </div>
-    </div>
-  </div>
 
   <script>
-    // Use UTC dates to avoid timezone issues
-    const releaseDate = new Date(Date.UTC(2026, 10, 19)); // November 19, 2026 UTC
-    const startDate = new Date(Date.UTC(2025, 10, 7)); // November 7, 2025 UTC
-    const altStartDate = new Date(Date.UTC(2025, 10, 7)); // nov 7, 2025 delay UTC
-    const altEndDate = new Date(Date.UTC(2026, 4, 5)); // may 5, 2026 UTC
-    const trailer2release = new Date(Date.UTC(2025, 4, 6, 13, 30)); // May 6, 2025 13:30 UTC
+
+    const releaseDate = new Date(Date.UTC(2026, 10, 19));
+    const startDate = new Date(Date.UTC(2025, 10, 7));
+    const altStartDate = new Date(Date.UTC(2025, 10, 7));
+    const altEndDate = new Date(Date.UTC(2026, 4, 5));
+    const trailer2release = new Date(Date.UTC(2025, 4, 6, 13, 30));
 
     const daysSinceModes = ['days', 'hours', 'minutes', 'seconds'];
     let currentDaysSinceModeIndex = 0;
     let secondsUpdateInterval;
     let isAlternativeMode = false;
 
-    let isRetroMode = false;
+
+    let currentSpeculation = {
+      start: new Date(Date.UTC(2025, 10, 7)),
+      end: new Date(Date.UTC(2026, 4, 5)),
+      label: 'From November 7th 2025, To May 5th 2026'
+    };
+    let isSpeculationMenuOpen = false;
+
+    let isRetroMode = true;
     let retroBackgroundInterval;
     let currentBgIndex = 0;
     const totalBackgrounds = 4;
     let isBackgroundPaused = false;
 
-const achievements = [
-  { id: 1, title: "10%", description: "Reach 10% completion", targetPercentage: 10, targetDate: new Date('2025-12-17T12:00:00Z') },
-  { id: 2, title: "20%", description: "Reach 20% completion", targetPercentage: 20, targetDate: new Date('2026-01-26T00:00:00Z') },
-  { id: 3, title: "30%", description: "Reach 30% completion", targetPercentage: 30, targetDate: new Date('2026-03-06T12:00:00Z') },
-  { id: 4, title: "38.1%", description: "Reach 38.1% completion", targetPercentage: 38.1, targetDate: new Date('2026-04-05T05:22:48Z') },
-  { id: 5, title: "40%", description: "Reach 40% completion", targetPercentage: 40, targetDate: new Date('2026-04-14T00:00:00Z') },
-  { id: 6, title: "HALFWAY", description: "Reach 50% completion", targetPercentage: 50, targetDate: new Date('2026-05-22T12:00:00Z') },
-  { id: 7, title: "60%", description: "Reach 60% completion", targetPercentage: 60, targetDate: new Date('2026-07-30T00:00:00Z') },
-  { id: 8, title: "69.42%", description: "Nice.", targetPercentage: 69.42, targetDate: new Date('2026-09-05T14:26:54Z') },
-  { id: 9, title: "70%", description: "Reach 70% completion", targetPercentage: 70, targetDate: new Date('2026-09-07T12:00:00Z') },
-  { id: 10, title: "90%", description: "Reach 90% completion", targetPercentage: 90, targetDate: new Date('2026-11-04T12:00:00Z') },
-  { id: 11, title: "ULTIMATE LUCIA GTA 6", description: "Reach 100% completion", targetPercentage: 100, targetDate: new Date('2026-11-19T00:00:00Z') }
-];
+    const achievements = [
+      { id: 1, title: "10%", description: "Reach 10% completion", targetPercentage: 10, targetDate: new Date('2025-12-17T12:00:00Z') },
+      { id: 2, title: "20%", description: "Reach 20% completion", targetPercentage: 20, targetDate: new Date('2026-01-26T00:00:00Z') },
+      { id: 3, title: "30%", description: "Reach 30% completion", targetPercentage: 30, targetDate: new Date('2026-03-06T12:00:00Z') },
+      { id: 4, title: "38.1%", description: "Reach 38.1% completion", targetPercentage: 38.1, targetDate: new Date('2026-04-05T05:22:48Z') },
+      { id: 5, title: "40%", description: "Reach 40% completion", targetPercentage: 40, targetDate: new Date('2026-04-14T00:00:00Z') },
+      { id: 6, title: "HALFWAY", description: "Reach 50% completion", targetPercentage: 50, targetDate: new Date('2026-05-22T12:00:00Z') },
+      { id: 7, title: "60%", description: "Reach 60% completion", targetPercentage: 60, targetDate: new Date('2026-07-30T00:00:00Z') },
+      { id: 8, title: "69.42%", description: "Nice.", targetPercentage: 69.42, targetDate: new Date('2026-09-05T14:26:54Z') },
+      { id: 9, title: "70%", description: "Reach 70% completion", targetPercentage: 70, targetDate: new Date('2026-09-07T12:00:00Z') },
+      { id: 10, title: "90%", description: "Reach 90% completion", targetPercentage: 90, targetDate: new Date('2026-11-04T12:00:00Z') },
+      { id: 11, title: "LUCIA GTA 6", description: "Reach 100% completion", targetPercentage: 100, targetDate: new Date('2026-11-19T00:00:00Z') }
+    ];
+
+
+    const newsItems = [
+      {
+        title: "Grand Theft Auto VI is Now Set to Launch November 19, 2026",
+        date: "November 6, 2025",
+        author: "Rockstar Games",
+        image: "images/1.png",
+        link: "https://www.rockstargames.com/newswire/article/ak3ak31a49a221/grand-theft-auto-vi-is-now-set-to-launch-november-19-2026"
+      },
+      {
+        title: "Grand Theft Auto VI Trailer 2",
+        date: "May 6, 2025",
+        author: "Rockstar Games",
+        image: "images/2.png",
+        link: "https://youtu.be/VQRLujxTm3c?si=Cff0QaD5pULeEC8N"
+      },
+      {
+        title: "Grand Theft Auto VI is Now Set to Launch May 26, 2026",
+        date: "May 2, 2025",
+        author: "Rockstar Games",
+        image: "images/1.png",
+        link: "https://www.rockstargames.com/newswire/article/258aa538o412ok/grand-theft-auto-vi-is-now-coming-may-26-2026"
+      },
+      {
+        title: "Grand Theft Auto VI Trailer 1",
+        date: "December 5, 2023",
+        author: "Insider Info",
+        image: "images/3.png",
+        link: "https://youtu.be/QdBZY2fkU-0?si=KIuEpbK4XBj3LwOh"
+      }
+    ];
+
+    function renderNewsItems() {
+      const newsGrid = document.getElementById('newsGrid');
+      if (!newsGrid) return;
+      newsGrid.innerHTML = '';
+
+      newsItems.forEach(item => {
+        const hasLink = item.link && item.link.trim() !== '';
+
+        const card = document.createElement('div');
+        card.className = 'news-card';
+        if (hasLink) {
+          card.onclick = () => window.open(item.link, '_blank');
+        }
+
+        card.innerHTML = `
+          <div class="news-image-container">
+            <img src="${item.image}" alt="${item.title}" class="news-image">
+          </div>
+          <div class="news-content">
+            <div class="news-meta">
+              <span class="news-author">${item.author}</span>
+            </div>
+            <div class="news-title">${item.title}</div>
+            <div class="news-date">${item.date}</div>
+          </div>
+        `;
+
+        newsGrid.appendChild(card);
+      });
+    }
 
     function updateCountdownInfo() {
       const now = new Date();
-      
+
       let percentage, daysLeft, daysSinceText;
-      
+
       if (isAlternativeMode) {
-        const total = altEndDate - altStartDate;
-        const elapsed = now - altStartDate;
+        const total = currentSpeculation.end - currentSpeculation.start;
+        const elapsed = now - currentSpeculation.start;
         percentage = (elapsed / total) * 100;
         percentage = Math.max(0, Math.min(100, percentage));
-        
-        daysLeft = Math.ceil((altEndDate - now) / (1000 * 60 * 60 * 24));
-        document.getElementById('daysLeft').textContent = `${daysLeft} Days Left Until May 5th 2026          ( trailer 3 speculation )`;
-        
+
+        daysLeft = Math.ceil((currentSpeculation.end - now) / (1000 * 60 * 60 * 24));
+        const endDateStr = currentSpeculation.end.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        document.getElementById('daysLeft').textContent = `${daysLeft} Days Left Until ${endDateStr}          ( trailer 3 speculation )`;
+
         document.querySelector('.days-since-container').style.display = 'none';
-        document.getElementById('dateRangeText').style.display = 'block';
+        document.getElementById('dateRangeContainer').style.display = 'flex';
+        document.getElementById('dateRangeText').textContent = currentSpeculation.label;
         document.getElementById('countdownDateRangeText').style.display = 'none';
+
+
+        updateSpeculationPercentages();
       } else {
         const total = releaseDate - startDate;
         const elapsed = now - startDate;
         percentage = (elapsed / total) * 100;
         percentage = Math.max(0, Math.min(100, percentage));
-        
+
         daysLeft = Math.ceil((releaseDate - now) / (1000 * 60 * 60 * 24));
         document.getElementById('daysLeft').textContent = `${daysLeft} Days Left Until Grand Theft Auto VI`;
-        
+
         document.querySelector('.days-since-container').style.display = 'flex';
-        document.getElementById('dateRangeText').style.display = 'none';
+        document.getElementById('dateRangeContainer').style.display = 'none';
         document.getElementById('countdownDateRangeText').style.display = 'block';
-        
+
         const msSince = now - trailer2release;
         const daysSince = Math.floor(msSince / (1000 * 60 * 60 * 24));
         const hoursSince = Math.floor(msSince / (1000 * 60 * 60));
@@ -964,35 +1425,41 @@ const achievements = [
             break;
         }
       }
-      
+
       document.getElementById('percentage').textContent = percentage.toFixed(2) + '%';
-      
+
       if (!isAlternativeMode) {
         updateAchievementsDisplay(percentage);
       }
     }
 
     function updateAchievementsDisplay(currentPercentage) {
-      const achievementsList = document.getElementById('achievementsList');
-      achievementsList.innerHTML = '';
-      
+      const achievementsGrid = document.getElementById('achievementsGrid');
+      achievementsGrid.innerHTML = '';
+
       achievements.forEach(achievement => {
         const isUnlocked = currentPercentage >= achievement.targetPercentage;
-        const achievementItem = document.createElement('div');
-        achievementItem.className = `achievement-item ${isUnlocked ? 'unlocked' : 'locked'}`;
-        
-        achievementItem.innerHTML = `
-          <div class="achievement-icon ${isUnlocked ? 'unlocked' : 'locked'}">
-            ${isUnlocked ? '🏆' : '🔒'}
-          </div>
-          <div class="achievement-details">
-            <div class="achievement-title">${achievement.title}</div>
-            <div class="achievement-description">${achievement.description}</div>
-            <div class="achievement-date">Target: ${achievement.targetDate.toLocaleDateString()}</div>
-          </div>
+
+
+        const card = document.createElement('div');
+        card.className = 'progress-card';
+        card.style.opacity = isUnlocked ? '1' : '0.6';
+
+        card.innerHTML = `
+            <div class="news-image-container" style="height: 120px; display: flex; align-items: center; justify-content: center; background: ${isUnlocked ? '#8a34db' : '#333'};">
+               <span style="font-size: 50px;">${isUnlocked ? '🏆' : '🔒'}</span>
+            </div>
+            <div class="news-content">
+              <div class="news-meta">
+                 <span class="news-author">${achievement.targetPercentage}% </span>
+              </div>
+              <div class="news-title" style="font-size: 18px;">${achievement.title}</div>
+              <div class="news-date">${achievement.description}</div>
+              <div class="news-date" style="margin-top: 5px;">Target: ${achievement.targetDate.toLocaleDateString()}</div>
+            </div>
         `;
-        
-        achievementsList.appendChild(achievementItem);
+
+        achievementsGrid.appendChild(card);
       });
     }
 
@@ -1009,22 +1476,104 @@ const achievements = [
       updateCountdownInfo();
     }
 
+    function toggleSpeculationMenu() {
+      const menu = document.getElementById('speculationMenu');
+      const dot = document.getElementById('speculationDot');
+      isSpeculationMenuOpen = !isSpeculationMenuOpen;
+
+      if (isSpeculationMenuOpen) {
+        menu.classList.add('open');
+        dot.classList.add('active');
+      } else {
+        menu.classList.remove('open');
+        dot.classList.remove('active');
+      }
+    }
+
+    function selectSpeculation(element) {
+
+      document.querySelectorAll('.speculation-item').forEach(item => {
+        item.classList.remove('selected');
+      });
+      element.classList.add('selected');
+
+
+      const startParts = element.dataset.start.split('-');
+      const endParts = element.dataset.end.split('-');
+
+      currentSpeculation = {
+        start: new Date(Date.UTC(parseInt(startParts[0]), parseInt(startParts[1]) - 1, parseInt(startParts[2]))),
+        end: new Date(Date.UTC(parseInt(endParts[0]), parseInt(endParts[1]) - 1, parseInt(endParts[2]))),
+        label: element.dataset.label
+      };
+
+
+      localStorage.setItem('selectedSpeculation', JSON.stringify({
+        start: element.dataset.start,
+        end: element.dataset.end,
+        label: element.dataset.label
+      }));
+
+
+      toggleSpeculationMenu();
+
+
+      updateCountdownInfo();
+    }
+
+    function updateSpeculationPercentages() {
+      const now = new Date();
+      const startDate = new Date(Date.UTC(2025, 10, 7));
+
+      const speculations = [
+        { id: 'spec-may5-pct', end: new Date(Date.UTC(2026, 4, 5)) },
+        { id: 'spec-may10-pct', end: new Date(Date.UTC(2026, 4, 10)) },
+        { id: 'spec-feb2-pct', end: new Date(Date.UTC(2026, 1, 2)) }
+      ];
+
+      speculations.forEach(spec => {
+        const total = spec.end - startDate;
+        const elapsed = now - startDate;
+        let pct = (elapsed / total) * 100;
+        pct = Math.max(0, Math.min(100, pct));
+
+        const element = document.getElementById(spec.id);
+        if (element) {
+          element.textContent = pct.toFixed(0) + '%';
+        }
+      });
+    }
+
+
+    document.addEventListener('click', function (event) {
+      const menu = document.getElementById('speculationMenu');
+      const dot = document.getElementById('speculationDot');
+
+      if (menu && dot && isSpeculationMenuOpen) {
+        if (!menu.contains(event.target) && !dot.contains(event.target)) {
+          menu.classList.remove('open');
+          dot.classList.remove('active');
+          isSpeculationMenuOpen = false;
+        }
+      }
+    });
+
     function setupMainUpdateInterval() {
       clearInterval(window.mainCountdownInterval);
       clearInterval(secondsUpdateInterval);
 
-      // Update every 10 seconds for both modes
+
       window.mainCountdownInterval = setInterval(() => {
         updateCountdownInfo();
-      }, 10000); // 10 seconds
+      }, 10000);
     }
 
     function toggleCalculationMode() {
       isAlternativeMode = !isAlternativeMode;
-      
+
       const countdownRadio = document.getElementById('radio-countdown');
       const trailer3Radio = document.getElementById('radio-trailer3');
-      
+
       if (isAlternativeMode) {
         countdownRadio.checked = false;
         trailer3Radio.checked = true;
@@ -1032,19 +1581,13 @@ const achievements = [
         countdownRadio.checked = true;
         trailer3Radio.checked = false;
       }
-      
+
       clearInterval(secondsUpdateInterval);
       clearInterval(window.mainCountdownInterval);
       updateCountdownInfo();
       setupMainUpdateInterval();
     }
 
-    function showSettings() {
-      document.getElementById('settingsModal').style.display = 'block';
-    }
-    function hideSettings() {
-      document.getElementById('settingsModal').style.display = 'none';
-    }
     function showAchievements() {
       document.getElementById('achievementsModal').style.display = 'block';
     }
@@ -1055,13 +1598,13 @@ const achievements = [
     function updateArrowVisibility() {
       const toggleArrowsCheckbox = document.getElementById('toggleArrows');
       const cycleArrows = document.querySelectorAll('.cycle-arrow');
-      
+
       if (toggleArrowsCheckbox && cycleArrows.length > 0) {
         const hideArrows = toggleArrowsCheckbox.checked;
         cycleArrows.forEach(arrow => {
           arrow.style.display = hideArrows ? 'none' : 'inline-block';
         });
-        localStorage.setItem('hideArrows', hideArrows); 
+        localStorage.setItem('hideArrows', hideArrows);
       }
     }
 
@@ -1072,10 +1615,10 @@ const achievements = [
       const cycleArrows = document.querySelectorAll('.cycle-arrow');
       const dateRangeText = document.getElementById('dateRangeText');
       const countdownDateRangeText = document.getElementById('countdownDateRangeText');
-      
+
       if (fontSizeCheckbox) {
         const largeFont = fontSizeCheckbox.checked;
-        
+
         if (largeFont) {
           percentage.style.fontSize = '80px';
           daysTexts.forEach(text => {
@@ -1097,18 +1640,18 @@ const achievements = [
           dateRangeText.style.fontSize = '14px';
           countdownDateRangeText.style.fontSize = '14px';
         }
-        
+
         localStorage.setItem('largeFont', largeFont);
       }
     }
 
     function toggleRetroMode() {
       const retroModeToggle = document.getElementById('retroModeToggle');
-      
+
       if (retroModeToggle) {
         isRetroMode = retroModeToggle.checked;
         const retroModeElement = document.getElementById('retroMode');
-        
+
         if (isRetroMode) {
           retroModeElement.style.display = 'block';
           document.body.classList.add('retro-mode-active');
@@ -1118,14 +1661,14 @@ const achievements = [
           document.body.classList.remove('retro-mode-active');
           stopBackgroundCycle();
         }
-        
+
         localStorage.setItem('retroMode', isRetroMode);
       }
     }
 
     function startBackgroundCycle() {
       updateBackground();
-      
+
       if (!isBackgroundPaused) {
         retroBackgroundInterval = setInterval(() => {
           currentBgIndex = (currentBgIndex + 1) % totalBackgrounds;
@@ -1136,7 +1679,7 @@ const achievements = [
 
     function stopBackgroundCycle() {
       clearInterval(retroBackgroundInterval);
-      
+
       for (let i = 1; i <= totalBackgrounds; i++) {
         const bgElement = document.getElementById(`retroBg${i}`);
         if (bgElement) {
@@ -1152,7 +1695,7 @@ const achievements = [
           bgElement.classList.remove('active');
         }
       }
-      
+
       const currentBg = document.getElementById(`retroBg${currentBgIndex + 1}`);
       if (currentBg) {
         currentBg.classList.add('active');
@@ -1161,112 +1704,181 @@ const achievements = [
 
     function toggleBackgroundPause() {
       const pauseCheckbox = document.getElementById('pauseBackgrounds');
-      
+
       if (pauseCheckbox) {
         isBackgroundPaused = pauseCheckbox.checked;
-        
+
         if (isBackgroundPaused) {
           clearInterval(retroBackgroundInterval);
         } else {
           startBackgroundCycle();
         }
-        
+
         localStorage.setItem('backgroundPaused', isBackgroundPaused);
       }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+
+      const savedSpeculation = localStorage.getItem('selectedSpeculation');
+      if (savedSpeculation) {
+        try {
+          const saved = JSON.parse(savedSpeculation);
+          const startParts = saved.start.split('-');
+          const endParts = saved.end.split('-');
+
+          currentSpeculation = {
+            start: new Date(Date.UTC(parseInt(startParts[0]), parseInt(startParts[1]) - 1, parseInt(startParts[2]))),
+            end: new Date(Date.UTC(parseInt(endParts[0]), parseInt(endParts[1]) - 1, parseInt(endParts[2]))),
+            label: saved.label
+          };
+
+
+          document.querySelectorAll('.speculation-item').forEach(item => {
+            item.classList.remove('selected');
+            if (item.dataset.end === saved.end) {
+              item.classList.add('selected');
+            }
+          });
+        } catch (e) {
+          console.error('Error loading saved speculation:', e);
+        }
+      }
+
       updateCountdownInfo();
       setupMainUpdateInterval();
+      renderNewsItems();
 
       const countdownRadio = document.getElementById('radio-countdown');
       const trailer3Radio = document.getElementById('radio-trailer3');
+      const newsRadio = document.getElementById('radio-news');
       const progressRadio = document.getElementById('radio-progress');
       const settingsRadio = document.getElementById('radio-settings');
-      
-      countdownRadio.addEventListener('change', function() {
-        if (this.checked && isAlternativeMode) {
-          toggleCalculationMode();
-        }
-      });
-      
-      trailer3Radio.addEventListener('change', function() {
-        if (this.checked && !isAlternativeMode) {
-          toggleCalculationMode();
-        }
-      });
-      
-      progressRadio.addEventListener('change', function() {
-        if (this.checked) {
-          showAchievements();
-          setTimeout(() => {
-            if (isAlternativeMode) {
-              trailer3Radio.checked = true;
-            } else {
-              countdownRadio.checked = true;
-            }
-          }, 100);
-        }
-      });
-      
-      settingsRadio.addEventListener('change', function() {
-        if (this.checked) {
-          showSettings();
-          setTimeout(() => {
-            if (isAlternativeMode) {
-              trailer3Radio.checked = true;
-            } else {
-              countdownRadio.checked = true;
-            }
-          }, 100);
-        }
-      });
+
+
+
+
+
+
 
       const toggleArrowsCheckbox = document.getElementById('toggleArrows');
       const fontSizeCheckbox = document.getElementById('fontSize');
       const retroModeToggle = document.getElementById('retroModeToggle');
       const pauseCheckbox = document.getElementById('pauseBackgrounds');
-      
+
       if (toggleArrowsCheckbox) {
         toggleArrowsCheckbox.addEventListener('change', updateArrowVisibility);
         const hideArrowsPreference = localStorage.getItem('hideArrows') === 'true';
-        toggleArrowsCheckbox.checked = hideArrowsPreference; 
-        updateArrowVisibility(); 
+        toggleArrowsCheckbox.checked = hideArrowsPreference;
+        updateArrowVisibility();
       }
-      
+
       if (fontSizeCheckbox) {
         fontSizeCheckbox.addEventListener('change', updateFontSize);
         const largeFontPreference = localStorage.getItem('largeFont') !== 'false';
-        fontSizeCheckbox.checked = largeFontPreference; 
-        updateFontSize(); 
+        fontSizeCheckbox.checked = largeFontPreference;
+        updateFontSize();
       }
-      
+
       if (retroModeToggle) {
         retroModeToggle.addEventListener('change', toggleRetroMode);
-        const retroModePreference = localStorage.getItem('retroMode') !== 'false'; 
+
+
+        const savedRetro = localStorage.getItem('retroMode');
+        const retroModePreference = savedRetro === null ? true : savedRetro !== 'false';
+
         retroModeToggle.checked = retroModePreference;
         toggleRetroMode();
       }
-      
+
+
+      document.querySelectorAll('.settings-card').forEach(card => {
+        card.addEventListener('click', function (e) {
+
+          if (e.target.type === 'checkbox') return;
+
+
+          const targetId = this.getAttribute('data-target');
+          if (targetId) {
+            const checkbox = document.getElementById(targetId);
+            if (checkbox) {
+              checkbox.checked = !checkbox.checked;
+
+              checkbox.dispatchEvent(new Event('change'));
+            }
+          }
+        });
+      });
+
       if (pauseCheckbox) {
         const backgroundPausedPreference = localStorage.getItem('backgroundPaused') === 'true';
         isBackgroundPaused = backgroundPausedPreference;
         pauseCheckbox.checked = isBackgroundPaused;
-        
+
         pauseCheckbox.addEventListener('change', toggleBackgroundPause);
-        
+
         if (isRetroMode && isBackgroundPaused) {
           updateBackground();
         }
-        
+
         if (isBackgroundPaused) {
           clearInterval(retroBackgroundInterval);
         }
       }
+
+
+
+
+      function switchView(viewId) {
+
+        document.querySelector('.content').style.display = 'none';
+        document.getElementById('newsContainer').style.display = 'none';
+        document.getElementById('progressContainer').style.display = 'none';
+        document.getElementById('settingsContainer').style.display = 'none';
+
+        document.body.classList.remove('news-mode-active');
+
+        if (viewId === 'news') {
+          document.body.classList.add('news-mode-active');
+          document.getElementById('newsContainer').style.display = 'block';
+        } else if (viewId === 'progress') {
+          document.body.classList.add('news-mode-active');
+          document.getElementById('progressContainer').style.display = 'block';
+        } else if (viewId === 'settings') {
+          document.body.classList.add('news-mode-active');
+          document.getElementById('settingsContainer').style.display = 'block';
+        } else {
+
+          document.querySelector('.content').style.display = 'block';
+        }
+      }
+
+      newsRadio.addEventListener('change', function () {
+        if (this.checked) switchView('news');
+      });
+
+      progressRadio.addEventListener('change', function () {
+        if (this.checked) switchView('progress');
+      });
+
+      settingsRadio.addEventListener('change', function () {
+        if (this.checked) switchView('settings');
+      });
+
+
+      const radiosToReset = [countdownRadio, trailer3Radio];
+
+      radiosToReset.forEach(radio => {
+        radio.addEventListener('change', function () {
+          if (this.checked) {
+            switchView('main');
+            if (this.id === 'radio-countdown' && isAlternativeMode) toggleCalculationMode();
+            if (this.id === 'radio-trailer3' && !isAlternativeMode) toggleCalculationMode();
+          }
+        });
+      });
     });
   </script>
 </body>
+
 </html>
-
-
-
